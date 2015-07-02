@@ -1,0 +1,13 @@
+html {
+  font-size: 10px;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #f4f4f4;
+}
+
+
+* { /* TODO: Remove before shipping */
+  font-family: 'Fira Sans';
+}
