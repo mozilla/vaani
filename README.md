@@ -5,8 +5,8 @@ Vaani - Firefox OS Virtual Assistant
 ## Setup
 
 ```bash
-$ git clone git@github.com:jedireza/fxos-voice-commands.git
-$ cd fxos-voice-commands
+$ git clone git@github.com:mozilla/vaani.git
+$ cd vaani
 $ npm install
 ```
 
