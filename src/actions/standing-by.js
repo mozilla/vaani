@@ -120,6 +120,8 @@ class StandingByActions {
         debug('Unable to interpret open command.', command);
 
         this.vaani.say('I could not find that app.');
+
+        return;
       }
 
       AppLauncher.launch(appToLaunch, (err) => {
