@@ -5,14 +5,14 @@ class AppLauncher {
    * Launches an app or returns an error
    * @param appName {String} The app to launch
    */
-  static launch (appName, callback) {
+  static launch (appName, entryPoint, callback) {
     this.findByName(appName, (err, app) => {
       if (err) {
         callback(err);
         return;
       }
 
-      app.launch();
+      app.launch(entryPoint);
     });
   }
 

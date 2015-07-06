@@ -72,10 +72,12 @@ class StandingByActions {
     }
 
     if (command.indexOf('open') > -1) {
-      var appToLaunch;
+      var appRequested, appToLaunch, entryPoint;
 
       if (command.indexOf('phone') > -1) {
-        appToLaunch = 'phone'; // not working, why?
+        appToLaunch = 'communications';
+        appRequested = 'phone';
+        entryPoint = 'dialer';
       }
       else if (command.indexOf('messages') > -1) {
         appToLaunch = 'messages';
@@ -84,7 +86,9 @@ class StandingByActions {
         appToLaunch = 'e-mail';
       }
       else if (command.indexOf('contacts') > -1) {
-        appToLaunch = 'contacts'; // not working, why?
+        appToLaunch = 'communications';
+        appRequested = 'contacts';
+        entryPoint = 'contacts';
       }
       else if (command.indexOf('browser') > -1) {
         appToLaunch = 'browser';
@@ -124,11 +128,13 @@ class StandingByActions {
         return;
       }
 
-      AppLauncher.launch(appToLaunch, (err) => {
+      appRequested = appRequested || appToLaunch;
+
+      AppLauncher.launch(appToLaunch, entryPoint, (err) => {
         if (err) {
           debug('AppLauncher error', err);
 
-          this.vaani.say('I was not able to open ' + appToLaunch + '.');
+          this.vaani.say('I was not able to open ' + appRequested + '.');
         }
       });
     }
