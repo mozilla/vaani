@@ -13,6 +13,8 @@ class AppLauncher {
       }
 
       app.launch(entryPoint);
+
+      callback();
     });
   }
 

@@ -137,9 +137,19 @@ class StandingByActions {
         if (err) {
           debug('AppLauncher error', err);
 
-          this.vaani.say('I was not able to open ' + appRequested + '.');
+          this.vaani.say('I was not able to find ' + appRequested + '.');
+
+          return;
         }
+
+        AppStore.state.standingBy.text = '';
+        AppStore.emitChange();
       });
+    }
+    else {
+      debug('Unable to match interpretation');
+
+      this.vaani.say('I\'m sorry, I wasn\'t able to understand.');
     }
   }
 
