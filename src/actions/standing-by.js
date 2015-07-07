@@ -50,7 +50,10 @@ class StandingByActions {
   static greetUser () {
     debug('greetUser');
 
-    this.vaani.say('How may I help you?', true);
+    AppStore.state.standingBy.text = 'How may I help you?';
+    AppStore.emitChange();
+
+    this.vaani.listen();
   }
 
   /**
@@ -75,8 +78,8 @@ class StandingByActions {
       var appRequested, appToLaunch, entryPoint;
 
       if (command.indexOf('phone') > -1) {
-        appToLaunch = 'communications';
         appRequested = 'phone';
+        appToLaunch = 'communications';
         entryPoint = 'dialer';
       }
       else if (command.indexOf('messages') > -1) {
@@ -86,8 +89,8 @@ class StandingByActions {
         appToLaunch = 'e-mail';
       }
       else if (command.indexOf('contacts') > -1) {
-        appToLaunch = 'communications';
         appRequested = 'contacts';
+        appToLaunch = 'communications';
         entryPoint = 'contacts';
       }
       else if (command.indexOf('browser') > -1) {
@@ -172,8 +175,6 @@ class StandingByActions {
    */
   static _onListen () {
     debug('_onListen');
-
-    AppStore.state.standingBy.text = '';
 
     TalkieActions.setActiveAnimation('receiving');
   }

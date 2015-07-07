@@ -13,9 +13,9 @@ var StandingBy = GaiaComponent.register('vaani-standing-by', {
     StandingByActions.setupSpeech();
   },
   attached: function () {
-    StandingByActions.greetUser();
-
     AppStore.addChangeListener(this.render.bind(this));
+
+    StandingByActions.greetUser();
 
     this.render();
   },
