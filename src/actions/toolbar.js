@@ -11,7 +11,7 @@ class ToolbarActions {
    * @param value {String} The active item
    */
   static setActiveItem (value) {
-    debug('setAtiveItem', arguments);
+    debug('setActiveItem', arguments);
 
     AppStore.state.toolbar.activeItem = value;
     AppStore.emitChange();
