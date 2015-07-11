@@ -91,7 +91,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
         </div>
 
         <div class="mic">
-          <img alt="tap to talk" src="/style/images/mic.png" />
+          <img alt="tap to talk" src="/assets/images/mic.png" />
         </div>
       </div>
     </div>

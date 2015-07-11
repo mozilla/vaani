@@ -5,12 +5,12 @@
   "type" : "certified",
   "launch_path": "/index.html",
   "icons": {
-    "84": "/style/icons/vaani.png",
-    "126": "/style/icons/vaani@1.5.png",
-    "128": "/style/icons/vaani@1.5.png",
-    "142": "/style/icons/vaani@2.png",
-    "189": "/style/icons/vaani@2.25.png",
-    "284": "/style/icons/vaani@3.375.png"
+    "84": "/assets/icons/vaani.png",
+    "126": "/assets/icons/vaani@1.5.png",
+    "128": "/assets/icons/vaani@1.5.png",
+    "142": "/assets/icons/vaani@2.png",
+    "189": "/assets/icons/vaani@2.25.png",
+    "284": "/assets/icons/vaani@3.375.png"
   },
   "developer": {
     "name": "Aus Lacroix and Andr&eacute; Natal",
@@ -30,6 +30,9 @@
     },
     "telephony": {
       "description" : "Make calls"
+    },
+    "voicemail": {
+      "description" : "Check message count"
     },
     "webapps-manage" : {
       "description": "Read list of installed apps to enable launching them"

@@ -67,17 +67,17 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
       <div class="community">
         <img
           alt="community"
-          src="/style/images/community.png"
-          data-src-active="/style/images/community_pressed.png"
-          data-src-inactive="/style/images/community.png"
+          src="/assets/images/community.png"
+          data-src-active="/assets/images/community_pressed.png"
+          data-src-inactive="/assets/images/community.png"
         />
       </div>
       <div class="help">
         <img
           alt="help"
-          src="/style/images/help.png"
-          data-src-active="/style/images/help_pressed.png"
-          data-src-inactive="/style/images/help.png"
+          src="/assets/images/help.png"
+          data-src-active="/assets/images/help_pressed.png"
+          data-src-inactive="/assets/images/help.png"
         />
       </div>
       <div class="clearfix"></div>

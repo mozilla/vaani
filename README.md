@@ -1,12 +1,13 @@
-# vaani
+# Vaani
 
-Vaani - Firefox OS Virtual Assistant
+FirefoxOS Virtual Assistant
 
 ## Setup
 
 ```bash
 $ git clone git@github.com:mozilla/vaani.git
 $ cd vaani
+$ npm run bower
 $ npm install
 ```
 
