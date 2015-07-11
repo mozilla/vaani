@@ -10,6 +10,7 @@ var Help = GaiaComponent.register('vaani-help', {
     this.dialog = this.shadowRoot.querySelector('gaia-dialog-alert');
   },
   attached: function () {
+    window.dialog = this.dialog;
     this.dialog.open();
     this.dialog.addEventListener('closed', this.onClose.bind(this));
   },
