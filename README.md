@@ -11,6 +11,20 @@ $ npm run bower
 $ npm install
 ```
 
+## Build
+
+```bash
+$ npm run build
+```
+
+## Flash
+
+Once built you can flash the `./build` directory to your device using WebIDE.
+
+## Developing in the browser
+
+### Enable the Web Speech API
+
 In order to make developing in the browser easier we can run a custom build of
 Gecko. Grab yourself a clone of
 [`gecko-dev`](https://github.com/mozilla/gecko-dev). Then inside the
@@ -42,14 +56,7 @@ http://about:config
 | media.webspeech.recognition.force_enable | boolean | true  |
 | media.webspeech.synth.enabled            | boolean | true  |
 
-
-## Build
-
-```bash
-$ npm run build
-```
-
-## Local dev server
+### Local dev server
 
 In the browser accessing the mic requests permission from the user everytime.
 That is unless you're on a secure connection. In order to start the local dev
@@ -69,3 +76,4 @@ $ npm start
 Now open https://localhost:8080/ in your navigator of choice. As well as
 serving the app, this will also watch for changes and automatically re-build
 the app.
+
