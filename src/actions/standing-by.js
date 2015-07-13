@@ -3,6 +3,7 @@ import AppStore from '../stores/app';
 import Vaani from '../lib/vaani';
 import AppLauncher from '../lib/app-launcher';
 import Dialer from '../lib/dialer';
+import DisplayActions from './display';
 import TalkieActions from './talkie';
 
 
@@ -94,7 +95,9 @@ class StandingByActions {
     if (command.indexOf('call') > -1) {
       var phoneNumber = Dialer.wordsToDigits(command);
 
-      Dialer.dial(phoneNumber);
+      AppStore.state.callNumber.phoneNumber = phoneNumber;
+
+      DisplayActions.changeViews('vaani-call-number');
     }
     else if (command.indexOf('open') > -1) {
       var appRequested, appToLaunch, entryPoint;

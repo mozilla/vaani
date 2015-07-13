@@ -1,4 +1,9 @@
 /* global speechSynthesis */
+import Debug from 'debug';
+
+
+let debug = Debug('Vaani');
+
 
 class Vaani {
   /**
@@ -14,6 +19,8 @@ class Vaani {
    * @param options.onListenDone {Function} The function to call when listen finishes
    */
   constructor (options = {}) {
+    debug('constructor', arguments);
+
     if (!options.hasOwnProperty('grammar')) {
       throw Error('Missing required `grammar` option.');
     }
@@ -44,6 +51,8 @@ class Vaani {
    *        response after the sentence has been said
    */
   say (sentence, waitForResponse) {
+    debug('say', arguments);
+
     if (this._onSay) {
       this._onSay(sentence, waitForResponse)
     }
@@ -111,6 +120,8 @@ class Vaani {
    * Listen for a response from the user
    */
   listen () {
+    debug('listen');
+
     if (this._onListen) {
       this._onListen()
     }
@@ -173,6 +184,8 @@ class Vaani {
    * Cancels speech synthesis and/or recognition
    */
   cancel () {
+    debug('cancel');
+
     if (this.isListening) {
       this.speechRecognition.abort();
     }

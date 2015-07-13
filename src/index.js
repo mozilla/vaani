@@ -9,6 +9,7 @@ import './components/help';
 import './components/talkie';
 import './components/toolbar';
 import './components/standing-by';
+import './components/call-number';
 
 
 window.myDebug = Debug;

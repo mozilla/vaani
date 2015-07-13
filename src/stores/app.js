@@ -31,6 +31,10 @@ var AppStore = {
     },
     standingBy: {
       text: ''
+    },
+    callNumber: {
+      text: '',
+      phoneNumber: ''
     }
   }
 };
