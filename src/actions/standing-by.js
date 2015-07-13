@@ -2,6 +2,7 @@ import Debug from 'debug';
 import AppStore from '../stores/app';
 import Vaani from '../lib/vaani';
 import AppLauncher from '../lib/app-launcher';
+import Dialer from '../lib/dialer';
 import TalkieActions from './talkie';
 
 
@@ -19,21 +20,37 @@ class StandingByActions {
       grammar: `
         #JSGF v1.0;
         grammar fxosVoiceCommands;
+        <app> =
+          phone |
+          messages |
+          email |
+          contacts |
+          browser |
+          gallery |
+          camera |
+          marketplace |
+          clock |
+          settings |
+          calendar |
+          music |
+          video |
+          calculator
+        ;
+        <digit> =
+          zero |
+          one |
+          two |
+          three |
+          four |
+          five |
+          six |
+          seven |
+          eight |
+          nine
+        ;
         public <simple> =
-          open phone |
-          open messages |
-          open email |
-          open contacts |
-          open browser |
-          open gallery |
-          open camera |
-          open marketplace |
-          open clock |
-          open settings |
-          open calendar |
-          open music |
-          open video |
-          open calculator
+          open <app> |
+          call <digit>+
         ;
       `,
       interpreter: this._interpreter.bind(this),
@@ -74,7 +91,12 @@ class StandingByActions {
       return;
     }
 
-    if (command.indexOf('open') > -1) {
+    if (command.indexOf('call') > -1) {
+      var phoneNumber = Dialer.wordsToDigits(command);
+
+      Dialer.dial(phoneNumber);
+    }
+    else if (command.indexOf('open') > -1) {
       var appRequested, appToLaunch, entryPoint;
 
       if (command.indexOf('phone') > -1) {

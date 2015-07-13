@@ -4,6 +4,8 @@ class AppLauncher {
   /**
    * Launches an app or returns an error
    * @param appName {String} The app to launch
+   * @param entryPoint {String} The entry point of the app
+   * @param callback {Function} The function to callback
    */
   static launch (appName, entryPoint, callback) {
     this.findByName(appName, (err, app) => {
