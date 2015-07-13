@@ -7,6 +7,11 @@ class Dialer {
    * @param callback {Function} The function to callback
    */
   static dial (phoneNumber, callback) {
+    if (!navigator.mozTelephony) {
+      callback(Error('navigator.mozTelephony not found'));
+      return;
+    }
+
     var telephony = navigator.mozTelephony;
 
     telephony.dial(phoneNumber).then(function (call) {
