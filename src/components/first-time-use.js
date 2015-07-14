@@ -77,7 +77,7 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
         </div>
         <div class="step-3">
           <h3 class="title">Not sure what to ask Vaani?</h3>
-          <p class="message">Find a list of everythign you can say to Vaani here.</p>
+          <p class="message">Find a list of everything you can say to Vaani here.</p>
           <hr />
           <button class="btn">Ok</button>
         </div>
