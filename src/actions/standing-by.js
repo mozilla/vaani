@@ -39,6 +39,7 @@ class StandingByActions {
         ;
         <digit> =
           zero |
+          o |
           one |
           two |
           three |
