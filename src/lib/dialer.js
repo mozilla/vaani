@@ -38,6 +38,7 @@ class Dialer {
     digits = digits.replace(/seven/g, '7');
     digits = digits.replace(/eight/g, '8');
     digits = digits.replace(/nine/g, '9');
+    digits = digits.replace(/o/g, '0');
     digits = digits.replace(/\s/g, '');
 
     return digits;
