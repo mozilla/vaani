@@ -1,4 +1,7 @@
 import GaiaComponent from 'gaia-component';
+import GetUserMedia from 'getusermedia';
+import AttachMediaStreawm from 'attachmediastream';
+import Hark from 'hark';
 import AppStore from '../stores/app';
 import TalkieActions from '../actions/talkie';
 
@@ -8,6 +11,8 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     this.setupShadowRoot();
 
     this.els = {};
+    this.els.video = this.shadowRoot.querySelector('video');
+    this.els.video.muted = true;
     this.els.mic = this.shadowRoot.querySelector('.mic');
     this.els.sending = this.shadowRoot.querySelector('.sending');
     this.els.receiving = this.shadowRoot.querySelector('.receiving');
@@ -23,12 +28,32 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
         this.els.receiving.appendChild(dot);
       }
     }
+
+    this.els.ring1Dots = this.shadowRoot.querySelectorAll('.ring-1');
+    this.els.ring2Dots = this.shadowRoot.querySelectorAll('.ring-2');
+    this.els.ring3Dots = this.shadowRoot.querySelectorAll('.ring-3');
+    this.els.ring4Dots = this.shadowRoot.querySelectorAll('.ring-4');
+    this.els.ring5Dots = this.shadowRoot.querySelectorAll('.ring-5');
   },
   attached: function () {
     this.els.mic.addEventListener('touchend', this.tapMic.bind(this));
     this.els.mic.addEventListener('click', this.toggleMic.bind(this));
 
     AppStore.addChangeListener(this.render.bind(this));
+
+    GetUserMedia({ audio: true, video: false }, (err, stream) => {
+      if (err) {
+        throw err;
+      }
+
+      // Reza: if we don't attach the media stream to something,
+      // the volume_change event will stop working after some time
+      // and just emit `-100 -50`.
+      AttachMediaStreawm(stream, this.els.video);
+
+      this.speechEvents = Hark(stream);
+      this.speechEvents.on('volume_change', this._onVolumeChange.bind(this));
+    });
 
     this.render();
   },
@@ -37,6 +62,63 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     this.els.mic.removeEventListener('click', this.toggleMic.bind(this));
 
     AppStore.removeChangeListener(this.render.bind(this));
+
+    this.speechEvents.off('volume_change', this._onVolumeChange.bind(this));
+  },
+  _onVolumeChange: function (volume, threshold) {
+    if (AppStore.state.talkie.activeAnimation !== 'receiving') {
+      return;
+    }
+
+    volume *= -1;
+
+    console.log(volume, threshold);
+
+    if (volume < 30) {
+      this._showHideRing(this.els.ring5Dots, true);
+      this._showHideRing(this.els.ring4Dots, true);
+      this._showHideRing(this.els.ring3Dots, true);
+      this._showHideRing(this.els.ring2Dots, true);
+      this._showHideRing(this.els.ring1Dots, true);
+    }
+    else if (volume > 30 && volume < 40) {
+      this._showHideRing(this.els.ring5Dots, false);
+      this._showHideRing(this.els.ring4Dots, true);
+      this._showHideRing(this.els.ring3Dots, true);
+      this._showHideRing(this.els.ring2Dots, true);
+      this._showHideRing(this.els.ring1Dots, true);
+    }
+    else if (volume > 40 && volume < 50) {
+      this._showHideRing(this.els.ring5Dots, false);
+      this._showHideRing(this.els.ring4Dots, false);
+      this._showHideRing(this.els.ring3Dots, false);
+      this._showHideRing(this.els.ring2Dots, true);
+      this._showHideRing(this.els.ring1Dots, true);
+    }
+    else if (volume > 50 && volume < 60) {
+      this._showHideRing(this.els.ring5Dots, false);
+      this._showHideRing(this.els.ring4Dots, false);
+      this._showHideRing(this.els.ring3Dots, false);
+      this._showHideRing(this.els.ring2Dots, false);
+      this._showHideRing(this.els.ring1Dots, true);
+    }
+    else {
+      this._showHideRing(this.els.ring5Dots, false);
+      this._showHideRing(this.els.ring4Dots, false);
+      this._showHideRing(this.els.ring3Dots, false);
+      this._showHideRing(this.els.ring2Dots, false);
+      this._showHideRing(this.els.ring1Dots, false);
+    }
+  },
+  _showHideRing: function (ring, show) {
+    for (let i = 0; i < ring.length; i++) {
+      if (show) {
+        ring[i].style.display = 'block';
+      }
+      else {
+        ring[i].style.display = 'none';
+      }
+    }
   },
   render: function () {
     if (AppStore.state.talkie.mode === 'idle') {
@@ -94,6 +176,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
           <img alt="tap to talk" src="/assets/images/mic.png" />
         </div>
       </div>
+      <video width="0" height="0"></video>
     </div>
 
     <style>
