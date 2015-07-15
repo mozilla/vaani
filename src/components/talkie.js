@@ -72,8 +72,6 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
 
     volume *= -1;
 
-    console.log(volume, threshold);
-
     if (volume < 30) {
       this._showHideRing(this.els.ring5Dots, true);
       this._showHideRing(this.els.ring4Dots, true);

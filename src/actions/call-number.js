@@ -81,7 +81,7 @@ class CallNumberActions {
         }
 
         call.onstatechange = (event) => {
-          debug('call stage changed', event);
+          debug('call state changed', event);
 
           if (call.state === 'disconnected') {
             DisplayActions.changeViews();
