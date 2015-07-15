@@ -1,6 +1,6 @@
 import GaiaComponent from 'gaia-component';
 import GetUserMedia from 'getusermedia';
-import AttachMediaStreawm from 'attachmediastream';
+import AttachMediaStream from 'attachmediastream';
 import Hark from 'hark';
 import AppStore from '../stores/app';
 import TalkieActions from '../actions/talkie';
@@ -49,7 +49,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
       // Reza: if we don't attach the media stream to something,
       // the volume_change event will stop working after some time
       // and just emit `-100 -50`.
-      AttachMediaStreawm(stream, this.els.video);
+      AttachMediaStream(stream, this.els.video);
 
       this.speechEvents = Hark(stream);
       this.speechEvents.on('volume_change', this._onVolumeChange.bind(this));
