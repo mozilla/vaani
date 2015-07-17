@@ -15,7 +15,7 @@
     "url": "git+https://github.com/jedireza/fxos-voice-commands.git"
   },
   "author": "Reza Akhavan <jedireza@gmail.com>",
-  "license": "MIT",
+  "license": "Apache License, Version 2.0",
   "bugs": {
     "url": "https://github.com/jedireza/fxos-voice-commands/issues"
   },
