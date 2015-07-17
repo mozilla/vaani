@@ -24,9 +24,8 @@ var Help = GaiaComponent.register('vaani-help', {
     <div id="help">
       <gaia-dialog-alert>
         <h3>What can I ask Vaani?</h3>
-        <p>Who are you?</p>
         <p>Open &lt;App&gt;</p>
-        <p>Play Music</p>
+        <p>Call &lt;Number&gt;</p>
       </gaia-dialog-alert>
     </div>
   `
