@@ -1,0 +1,10 @@
+{
+  "locales": [
+    "en-US",
+    "es-ES",
+    "fr"
+  ],
+  "resources": [
+    "./{{locale}}/help.l20n"
+  ]
+}
