@@ -73,7 +73,7 @@ class CallNumberActions {
 
       Dialer.dial(phoneNumber, (err, call) => {
         if (err) {
-          debug('Dialer error');
+          debug('Dialer error', err);
 
           this.vaani.say('I\'m sorry, I wasn\'t able to make the call.');
 
@@ -84,7 +84,7 @@ class CallNumberActions {
           debug('call state changed', event);
 
           if (call.state === 'disconnected') {
-            DisplayActions.changeViews();
+            DisplayActions.changeViews(null);
           }
         };
       });
@@ -92,7 +92,7 @@ class CallNumberActions {
     else if (command.indexOf('no') > -1) {
       this.vaani.say('Ok');
 
-      DisplayActions.changeViews();
+      DisplayActions.changeViews(null);
     }
     else {
       debug('Unable to match interpretation');
@@ -156,7 +156,7 @@ class CallNumberActions {
       TalkieActions.setActiveAnimation('none');
       TalkieActions.setMode('none');
 
-      DisplayActions.changeViews();
+      DisplayActions.changeViews(null);
 
       return;
     }
