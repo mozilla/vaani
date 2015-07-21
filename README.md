@@ -2,6 +2,10 @@
 
 FirefoxOS Virtual Assistant
 
+[![Build Status](https://travis-ci.org/mozilla/vaani.svg?branch=master)](https://travis-ci.org/mozilla/vaani)
+[![Dependency Status](https://david-dm.org/mozilla/vaani.svg?style=flat)](https://david-dm.org/mozilla/vaani)
+[![devDependency Status](https://david-dm.org/mozilla/vaani/dev-status.svg?style=flat)](https://david-dm.org/mozilla/vaani#info=devDependencies)
+
 ## Setup
 
 ```bash
