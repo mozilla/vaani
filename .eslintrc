@@ -1,0 +1,8 @@
+{
+  "extends": "standard",
+  "rules": {
+    "semi": [2, "always"],
+    "no-multiple-empty-lines": [1, { max: 2 }],
+    "brace-style": [2, "stroustrup", { "allowSingleLine": true }]
+  }
+}

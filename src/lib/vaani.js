@@ -1,4 +1,4 @@
-/* global speechSynthesis */
+/* global speechSynthesis, SpeechGrammarList, SpeechRecognition, SpeechSynthesisUtterance */
 import Debug from 'debug';
 
 
@@ -54,7 +54,7 @@ class Vaani {
     debug('say', arguments);
 
     if (this._onSay) {
-      this._onSay(sentence, waitForResponse)
+      this._onSay(sentence, waitForResponse);
     }
 
     if (waitForResponse) {
@@ -73,8 +73,8 @@ class Vaani {
         this._audioEl = document.createElement('audio');
 
         var url = 'http://speechan.cloudapp.net/weblayer/synth.ashx';
-            url += '?lng=' + lang;
-            url += '&msg=' + sentence;
+        url += '?lng=' + lang;
+        url += '&msg=' + sentence;
 
         this._audioEl.src = url;
         this._audioEl.setAttribute('autoplay', 'true');
@@ -82,7 +82,7 @@ class Vaani {
           this.isSpeaking = false;
 
           if (this._onSayDone) {
-            this._onSayDone(sentence, waitForResponse)
+            this._onSayDone(sentence, waitForResponse);
           }
 
           if (waitForResponse) {
@@ -100,7 +100,7 @@ class Vaani {
           this.isSpeaking = false;
 
           if (this._onSayDone) {
-            this._onSayDone(sentence, waitForResponse)
+            this._onSayDone(sentence, waitForResponse);
           }
 
           if (waitForResponse && !this._synthesisWasCanceled) {
@@ -123,7 +123,7 @@ class Vaani {
     debug('listen');
 
     if (this._onListen) {
-      this._onListen()
+      this._onListen();
     }
 
     this.isListening = true;
@@ -135,23 +135,23 @@ class Vaani {
       this._interpretingCommand = false;
 
       if (this._onListenDone) {
-        this._onListenDone()
+        this._onListenDone();
       }
 
       var transcript = '';
       var partialTranscript = '';
-      var confidence = 0;
-      var isFinal = false;
+      // var confidence = 0;
+      // var isFinal = false;
 
       // Assemble the transcript from the array of results
       for (var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          isFinal = true;
+          // isFinal = true;
           transcript += event.results[i][0].transcript;
           // Aus: This is useless right now but the idea is we wouldn't
           // always complete the action or command requested if the
           // confidence level is too low
-          confidence = event.results[i][0].confidence;
+          // confidence = event.results[i][0].confidence;
         }
         else {
           partialTranscript += event.results[i][0].transcript;
@@ -160,7 +160,7 @@ class Vaani {
           // transcript. We should ask the user to repeat what they
           // want when all we have is a partial transcript with 'low'
           // confidence.
-          confidence = event.results[i][0].confidence;
+          // confidence = event.results[i][0].confidence;
         }
       }
 
@@ -170,7 +170,7 @@ class Vaani {
       var usableTranscript = transcript || partialTranscript;
 
       // Aus: Ugh. This is really crappy error handling
-      if (usableTranscript == "ERROR") {
+      if (usableTranscript === 'ERROR') {
         var getOffMyLawn = new Error('Unrecognized speech.');
         this._interpreter(getOffMyLawn);
       }

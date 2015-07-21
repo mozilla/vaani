@@ -21,6 +21,22 @@ $ npm run build
 
 Once built you can flash the `./build` directory to your device using WebIDE.
 
+## Debug logs
+
+To see the output from the `debug` calls open your browser or WebIDE console and execute:
+
+```js
+myDebug.enable('*');
+```
+
+## Tests
+
+Runs the lint and tests.
+
+```js
+$ npm test
+```
+
 ## Developing in the browser
 
 ### Enable the Web Speech API

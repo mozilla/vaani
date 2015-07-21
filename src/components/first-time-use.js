@@ -17,8 +17,8 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
   },
   attached: function () {
     for (var i = 0; i < this.els.btns.length; ++i) {
-        var btn = this.els.btns[i];
-        btn.addEventListener('click', this.nextStep.bind(this));
+      var btn = this.els.btns[i];
+      btn.addEventListener('click', this.nextStep.bind(this));
     }
 
     AppStore.addChangeListener(this.render.bind(this));
@@ -29,8 +29,8 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
   },
   detached: function () {
     for (var i = 0; i < this.els.btns.length; ++i) {
-        var btn = this.els.btns[i];
-        btn.removeEventListener('click', this.nextStep.bind(this));
+      var btn = this.els.btns[i];
+      btn.removeEventListener('click', this.nextStep.bind(this));
     }
 
     AppStore.removeChangeListener(this.render.bind(this));

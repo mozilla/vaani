@@ -48,7 +48,7 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
     }
 
     var isSelected = AppStore.state.toolbar.activeItem === 'community';
-    ToolbarActions.setActiveItem(isSelected ? 'none': 'community');
+    ToolbarActions.setActiveItem(isSelected ? 'none' : 'community');
 
     DisplayActions.changeViews('vaani-community');
   },
@@ -58,7 +58,7 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
     }
 
     var isSelected = AppStore.state.toolbar.activeItem === 'help';
-    ToolbarActions.setActiveItem(isSelected ? 'none': 'help');
+    ToolbarActions.setActiveItem(isSelected ? 'none' : 'help');
 
     DisplayActions.changeViews('vaani-help');
   },
