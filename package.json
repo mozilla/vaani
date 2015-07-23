@@ -40,7 +40,7 @@
     "http-server": "^0.8.0",
     "jsdom": "^3.x.x",
     "lab": "^5.13.0",
-    "lab-babel": "phated/lab-babel",
+    "lab-babel": "^1.1.0",
     "pre-commit": "^1.0.10",
     "proxyquire": "^1.6.0",
     "watch": "^0.16.0"
