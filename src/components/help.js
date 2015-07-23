@@ -1,6 +1,7 @@
 import 'gaia-dialog/gaia-dialog-alert';
 import GaiaComponent from 'gaia-component';
 import ToolbarActions from '../actions/toolbar';
+import DisplayActions from '../actions/display';
 
 
 var Help = GaiaComponent.register('vaani-help', {
@@ -19,6 +20,7 @@ var Help = GaiaComponent.register('vaani-help', {
   },
   onClose: function () {
     ToolbarActions.setActiveItem('none');
+    DisplayActions.changeViews(null);
   },
   template: `
     <div id="help">
