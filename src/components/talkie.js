@@ -16,6 +16,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     this.els.mic = this.shadowRoot.querySelector('.mic');
     this.els.sending = this.shadowRoot.querySelector('.sending');
     this.els.receiving = this.shadowRoot.querySelector('#receiving');
+    this.els.dots = this.shadowRoot.querySelector('#dots');
     this.els.idlePopup = this.shadowRoot.querySelector('.idle-popup');
   },
   attached: function () {
@@ -56,23 +57,27 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     volume *= -1;
 
     if (volume < 30) {
-      this.els.receiving.className = '';
-      this.els.receiving.classList.add('show-5');
+      this.els.dots.className = '';
+      this.els.dots.classList.add('show-5');
     }
     else if (volume > 30 && volume < 40) {
-      this.els.receiving.className = '';
-      this.els.receiving.classList.add('show-4');
+      this.els.dots.className = '';
+      this.els.dots.classList.add('show-4');
     }
     else if (volume > 40 && volume < 50) {
-      this.els.receiving.className = '';
-      this.els.receiving.classList.add('show-3');
+      this.els.dots.className = '';
+      this.els.dots.classList.add('show-3');
     }
     else if (volume > 50 && volume < 60) {
-      this.els.receiving.className = '';
-      this.els.receiving.classList.add('show-2');
+      this.els.dots.className = '';
+      this.els.dots.classList.add('show-2');
+    }
+    else if (volume > 60 && volume < 70) {
+      this.els.dots.className = '';
+      this.els.dots.classList.add('show-1');
     }
     else {
-      this.els.receiving.className = '';
+      this.els.dots.className = '';
     }
   },
   _showHideRing: function (ring, show) {
@@ -129,9 +134,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
 
         <div id="receiving">
           <!--dots go here, see create method above-->
-          <svg class="dots">
-            <use xlink:href="/assets/images/sprite.svg#dots"></use>
-          </svg>
+          <div id="dots"></div>
         </div>
 
         <div class="sending"></div>
@@ -220,64 +223,56 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
         animation-delay: 0.5s;
       }
       #receiving {
+        justify-content: center;
+        align-items: center;
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: 6.8rem;
-        width: 6.8rem;
+        height: 100%;
+        width: 100%;
       }
-      #receiving.show-1 {
-        background-color: red;
-        display: block;
-      }
-      #receiving.show-1 .ring-1,
-      #receiving.show-2 .ring-1,
-      #receiving.show-2 .ring-2,
-      #receiving.show-3 .ring-1,
-      #receiving.show-3 .ring-2,
-      #receiving.show-3 .ring-3,
-      #receiving.show-4 .ring-1,
-      #receiving.show-4 .ring-2,
-      #receiving.show-4 .ring-3,
-      #receiving.show-4 .ring-4,
-      #receiving.show-5 .ring-1,
-      #receiving.show-5 .ring-2,
-      #receiving.show-5 .ring-3,
-      #receiving.show-5 .ring-4,
-      #receiving.show-5 .ring-5 {
-        display: block;
-      }
-      #receiving .dots {
+      #dots {
+        display: none;
         position: absolute;
         top: 50%;
         left: 50%;
         width: 22.4rem;
         height: 22.4rem;
-        margin: -11.2rem 0 0 -11.2rem;
+        border-radius: 50%;
+        background: url('/assets/images/dots.png') no-repeat 50% 50% / 22.4rem;
+        transform: translate(-50%, -50%);
+        transition-property: width, height;
+        transition-duration: 30ms;
+        transition-timing-function: linear;
         pointer-events: none;
       }
-      #receiving .ring-1,
-      #receiving .ring-2,
-      #receiving .ring-3,
-      #receiving .ring-4,
-      #receiving .ring-5 {
-        display: none;
+
+      #dots.show-5 {
+        display: block;
+        width: 22.4rem;
+        height: 22.4rem;
       }
-      #receiving .ring-1 {
-        fill: rgba(77,63,255, 0.4);
+
+      #dots.show-4 {
+        display: block;
+        width: 20rem;
+        height: 20rem;
       }
-      #receiving .ring-2 {
-        fill: rgba(108,63,255, 0.4);
+
+      #dots.show-3 {
+        display: block;
+        width: 17rem;
+        height: 17rem;
       }
-      #receiving .ring-3 {
-        fill: rgba(140,63,255, 0.4);
+
+      #dots.show-2 {
+        display: block;
+        width: 14rem;
+        height: 14rem;
       }
-      #receiving .ring-4 {
-        fill: rgba(163,63,255, 0.4);
-      }
-      #receiving .ring-5 {
-        fill: rgba(194,63,255, 0.4);
+
+      #dots.show-1 {
+        display: block;
+        width: 11rem;
+        height: 11rem;
       }
     </style>
   `,
