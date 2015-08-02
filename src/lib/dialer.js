@@ -14,8 +14,10 @@ class Dialer {
 
     var telephony = navigator.mozTelephony;
 
-    telephony.dial(phoneNumber).then(function (call) {
+    telephony.dial(phoneNumber).then((call) => {
       callback(null, call);
+    }).catch((err) => {
+      callback(err);
     });
   }
 
