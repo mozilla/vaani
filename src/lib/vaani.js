@@ -32,6 +32,8 @@ class Vaani {
     this.speechGrammarList = new SpeechGrammarList();
     this.speechGrammarList.addFromString(options.grammar, 1);
     this.speechRecognition = new SpeechRecognition();
+    this.speechRecognition.lang = 'en-US';
+    this.speechRecognition.grammars = this.speechGrammarList;
     this.isSpeaking = false;
     this.isListening = false;
     this._synthesisWasCanceled = false;
