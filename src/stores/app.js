@@ -1,15 +1,13 @@
-import { EventEmitter2 } from 'eventemitter2';
+import BaseStore from '../lib/base-store';
 
 
-const CHANGE_EVENT = 'change';
-
-
-class AppStore {
+class AppStore extends BaseStore {
   /**
    * @constructor
    */
   constructor () {
-    this._emitter = new EventEmitter2();
+    super();
+
     this.state = {
       display: {
         activeView: undefined
@@ -37,29 +35,6 @@ class AppStore {
         phoneNumber: ''
       }
     };
-  }
-
-  /**
-   * Emits a change event
-   */
-  emitChange () {
-    this._emitter.emit(CHANGE_EVENT);
-  }
-
-  /**
-   * Adds a change listener to the emitter
-   * @param func {Function} The function to add
-   */
-  addChangeListener (func) {
-    this._emitter.addListener(CHANGE_EVENT, func);
-  }
-
-  /**
-   * Adds a change listener to the emitter
-   * @param func {Function} The function to remove
-   */
-  removeChangeListener (func) {
-    this._emitter.removeListener(CHANGE_EVENT, func);
   }
 }
 

@@ -8,7 +8,7 @@
     "lint": "eslint ./src/**/*.js",
     "test": "npm run lint && lab -t 80 -S -T ./node_modules/lab-babel ./test/jsdom-setup.js ./test/src/ ./test/jsdom-teardown.js",
     "start": "DEBUG=* http-server --ssl -p 8000 -c-1 ./build & watch 'npm run build' ./src",
-    "build": "mkdir -p ./build && browserify ./src/index.js -t babelify -o ./build/index.js && cat ./bower_components/gaia-theme/gaia-theme.css src/index.css > ./build/index.css  && cp ./src/index.html ./build && cp ./src/manifest.webapp ./build && cp ./src/settings.json ./build && cp ./src/user.js ./build && cp -R ./src/assets ./build",
+    "build": "mkdir -p ./build && browserify ./src/index.js -t babelify -o ./build/index.js && cat ./bower_components/gaia-theme/gaia-theme.css src/index.css > ./build/index.css  && cp ./src/index.html ./build && cp ./src/manifest.webapp ./build && cp ./src/settings.json ./build && cp ./src/user.js ./build && cp -R ./src/assets ./build && cp -R ./src/locales ./build",
     "clean": "rm -rf ./build"
   },
   "repository": {
@@ -39,6 +39,7 @@
     "hark": "^1.1.2",
     "http-server": "^0.8.0",
     "jsdom": "^3.x.x",
+    "l20n": "^3.0.3",
     "lab": "^5.13.0",
     "lab-babel": "^1.1.0",
     "pre-commit": "^1.0.10",
