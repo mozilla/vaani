@@ -114,7 +114,12 @@ class Localizer {
   static get (key) {
     debug('get', arguments);
 
-    return translations.hasOwnProperty(key) ? translations[key] : key;
+    if (translations.hasOwnProperty(key)) {
+      return translations[key];
+    }
+    else {
+      return { value: key };
+    }
   }
 
   /**
