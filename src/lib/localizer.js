@@ -23,7 +23,7 @@ class Localizer {
    * Starts the localization logic by doing the initial l20n fetching and
    * listening for relevant events on the window when language options change
    * @param callback {Function} The function to callback after we've fetched
-   *        langs and built our localized strings
+   *        langs and built our localized entities
    */
   static start (callback) {
     debug('start', arguments);
@@ -36,7 +36,7 @@ class Localizer {
   }
 
   /**
-   * Fetches resources files and resolves entities
+   * Fetches resource files and resolves entities
    * @private
    * @return {Promise}
    */
@@ -53,10 +53,11 @@ class Localizer {
   }
 
   /**
-   * Prioritizes supported langs based on navigator.locales;
-   * specifically finds the first language of the navigator matching supported
-   * locales and moves the match to the front of the array and produces the
-   * final prioritized languages object array
+   * Prioritizes the `supportedLocales` array based on `navigator.languages`.
+   * Specifically we find the language of highest priority in the
+   * `navigator.languages' matched against our `supportedLocales` (in priority
+   * order) and moves the first match to the front of the array. This function
+   * also produces the value for the `prioritizedLangs` array.
    * @private
    */
   static _prioritizeLocales () {
@@ -88,7 +89,8 @@ class Localizer {
   }
 
   /**
-   * A shortcut for resolving entities
+   * A shortcut for resolving entities.
+   * TODO Reza: extend functionality for entity arguments
    * @param entity {String|Array<String>} The entity to resolve
    * @return {Promise}
    */
@@ -106,7 +108,8 @@ class Localizer {
   /**
    * A getter for translations
    * @param key {String} The property to get
-   * @return {Object} The value from translations or `key` if not found
+   * @return {Object} The value from translations or the literal value of `key`
+   *                  if not found.
    */
   static get (key) {
     debug('get', arguments);
@@ -134,7 +137,8 @@ class Localizer {
 
       el.innerHTML = translation.value;
 
-      // Reza: we need to double check this attrs logic
+      // TODO Reza: The attribute names here need logic from l20n that
+      //            translate camelCase into attribute-case
       if (translation.attrs) {
         for (let attr in translation.attrs) {
           el.setAttribute(attr, translation.attrs[attr]);
