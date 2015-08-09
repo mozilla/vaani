@@ -14,7 +14,6 @@ var Help = GaiaComponent.register('vaani-help', {
     Localizer.localize(this.shadowRoot);
   },
   attached: function () {
-    window.dialog = this.dialog;
     this.dialog.open();
     this.dialog.addEventListener('closed', this.onClose.bind(this));
 
