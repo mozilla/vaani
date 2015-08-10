@@ -13,7 +13,8 @@ let env = new Env(defaultLang, Fetch.bind(null, null));
 let ctx = env.createContext(['locales/{locale}.l20n']);
 let prioritizedLangs = [];
 let entities = [
-  'help__whatCanIAsk', 'help__openApp', 'help__callNumber'
+  'help__whatCanIAsk', 'help__openApp', 'help__callNumber',
+  'community__helpTheCommunity', 'community__comingSoonContent'
 ];
 let translations = {};
 

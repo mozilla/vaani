@@ -1,3 +1,11 @@
 <help__whatCanIAsk "What can I ask?">
 <help__openApp "Open &lt;App&gt;">
 <help__callNumber "Call &lt;Number&gt;">
+
+<community__helpTheCommunity "Help the Community">
+<community__comingSoonContent "
+  <p>You can help us improve Vaani's speech recognition by reading sentences.</p>
+  <p>Record yourself reading a sentence. The recording will then be submitted over wifi.</p>
+  <p>That's it! We appreciate the help!</p>
+  <p>(coming soon)</p>
+">
