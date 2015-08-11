@@ -1,7 +1,8 @@
 /* global window, document */
 import Debug from 'debug';
-import AppStore from './stores/app';
 import DisplayActions from './actions/display';
+import FirstTimeUseActions from './actions/first-time-use';
+import FirstTimeUseStore from './stores/first-time-use';
 import Localizer from './lib/localizer';
 import './components/community';
 import './components/display';
@@ -26,7 +27,7 @@ class App {
     launchCount = parseInt(launchCount, 10);
     launchCount += 1;
     localStorage.setItem('launchCount', launchCount);
-    AppStore.state.firstTimeUse.launchCount = launchCount;
+    FirstTimeUseActions.updateLaunchCount(launchCount);
 
     /*
     * instantiate top level components
@@ -45,7 +46,7 @@ class App {
     document.body.appendChild(display);
 
     if (launchCount <= 2) {
-      AppStore.state.firstTimeUse.tour.inFlight = true;
+      FirstTimeUseActions.startTour();
       DisplayActions.changeViews('vaani-first-time-use');
     }
 
@@ -54,14 +55,15 @@ class App {
     */
 
     var handleStateChange = function () {
-      if (AppStore.state.firstTimeUse.tour.inFlight) {
-        if (AppStore.state.firstTimeUse.tour.current === 0) {
+      var tourInfo = FirstTimeUseStore.getTourInfo();
+      if (tourInfo.inFlight) {
+        if (tourInfo.current === 0) {
           DisplayActions.changeViews(null);
         }
       }
     };
 
-    AppStore.addChangeListener(handleStateChange);
+    FirstTimeUseStore.addChangeListener(handleStateChange);
   }
 }
 

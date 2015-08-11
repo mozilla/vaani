@@ -1,5 +1,6 @@
 import 'gaia-dialog/gaia-dialog-alert';
 import GaiaComponent from 'gaia-component';
+import Localizer from '../lib/localizer';
 import ToolbarActions from '../actions/toolbar';
 import DisplayActions from '../actions/display';
 
@@ -13,9 +14,18 @@ var Community = GaiaComponent.register('vaani-community', {
   attached: function () {
     this.dialog.open();
     this.dialog.addEventListener('closed', this.onClose.bind(this));
+
+    Localizer.addChangeListener(this.localize.bind(this));
+
+    this.localize();
   },
   detached: function () {
     this.dialog.removeEventListener('closed', this.onClose.bind(this));
+
+    Localizer.removeChangeListener(this.localize.bind(this));
+  },
+  localize: function () {
+    Localizer.localize(this.shadowRoot);
   },
   onClose: function () {
     ToolbarActions.setActiveItem('none');
@@ -24,11 +34,8 @@ var Community = GaiaComponent.register('vaani-community', {
   template: `
     <div id="help">
       <gaia-dialog-alert>
-        <h3>Help the Community</h3>
-        <p>You can help us improve Vaani's speech recognition by reading sentences.</p>
-        <p>Record yourself reading a sentence. The recording will then be submitted over wifi.</p>
-        <p>That's it! We appreciate the help!</p>
-        <p>(coming soon)</p>
+        <h3 data-l10n-id="community__helpTheCommunity"></h3>
+        <div data-l10n-id="community__comingSoonContent"></div>
       </gaia-dialog-alert>
     </div>
   `

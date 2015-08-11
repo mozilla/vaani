@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import AppStore from '../stores/app';
+import DisplayStore from '../stores/display';
 
 
 let debug = Debug('DisplayActions');
@@ -13,17 +13,13 @@ class DisplayActions {
   static changeViews (componentName) {
     debug('changeViews', arguments);
 
-    var display = document.querySelector('vaani-display');
     var newView;
 
     if (componentName) {
       newView = document.createElement(componentName);
     }
 
-    display.changeViews(newView);
-
-    AppStore.state.display.activeView = newView;
-    AppStore.emitChange();
+    DisplayStore.updateActiveView(newView);
   }
 }
 

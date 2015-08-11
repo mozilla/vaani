@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import AppStore from '../stores/app';
+import ToolbarStore from '../stores/toolbar';
 
 
 let debug = Debug('ToolbarActions');
@@ -13,8 +13,7 @@ class ToolbarActions {
   static setActiveItem (value) {
     debug('setActiveItem', arguments);
 
-    AppStore.state.toolbar.activeItem = value;
-    AppStore.emitChange();
+    ToolbarStore.updateActiveItem(value);
   }
 }
 

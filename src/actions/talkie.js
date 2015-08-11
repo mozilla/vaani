@@ -1,5 +1,6 @@
 import Debug from 'debug';
-import AppStore from '../stores/app';
+import DisplayStore from '../stores/display';
+import TalkieStore from '../stores/talkie';
 import DisplayActions from './display';
 
 
@@ -14,10 +15,11 @@ class TalkieActions {
   static toggleMic () {
     debug('toggleMic');
 
-    if (AppStore.state.display.activeView &&
-        AppStore.state.display.activeView.toggleMic) {
+    var activeView = DisplayStore.getActiveView();
 
-      AppStore.state.display.activeView.toggleMic();
+    if (activeView && activeView.toggleMic) {
+      activeView.toggleMic();
+
       return;
     }
 
@@ -31,8 +33,7 @@ class TalkieActions {
   static setActiveAnimation (value) {
     debug('setActiveAnimation', arguments);
 
-    AppStore.state.talkie.activeAnimation = value;
-    AppStore.emitChange();
+    TalkieStore.updateActiveAnimation(value);
   }
 
   /**
@@ -42,8 +43,7 @@ class TalkieActions {
   static setMode (value) {
     debug('setMode', arguments);
 
-    AppStore.state.talkie.mode = value;
-    AppStore.emitChange();
+    TalkieStore.updateMode(value);
   }
 }
 

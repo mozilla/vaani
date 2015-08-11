@@ -1,5 +1,6 @@
 import Debug from 'debug';
-import AppStore from '../stores/app';
+import CallNumberStore from '../stores/call-number';
+import Localizer from '../lib/localizer';
 import Vaani from '../lib/vaani';
 import Dialer from '../lib/dialer';
 import DisplayActions from './display';
@@ -16,19 +17,15 @@ class CallNumberActions {
   static setupSpeech () {
     debug('setupSpeech');
 
-    this.vaani = new Vaani({
-      grammar: `
-        #JSGF v1.0;
-        grammar fxosVoiceCommands;
-        public <simple> =
-          yes | no
-        ;
-      `,
-      interpreter: this._interpreter.bind(this),
-      onSay: this._onSay.bind(this),
-      onSayDone: this._onSayDone.bind(this),
-      onListen: this._onListen.bind(this),
-      onListenDone: this._onListenDone.bind(this)
+    Localizer.resolve('callNumber__grammar').then((grammarEntity) => {
+      this.vaani = new Vaani({
+        grammar: grammarEntity.value,
+        interpreter: this._interpreter.bind(this),
+        onSay: this._onSay.bind(this),
+        onSayDone: this._onSayDone.bind(this),
+        onListen: this._onListen.bind(this),
+        onListenDone: this._onListenDone.bind(this)
+      });
     });
   }
 
@@ -38,20 +35,24 @@ class CallNumberActions {
   static confirmNumber () {
     debug('confirmNumber');
 
-    var phoneNumber = AppStore.state.callNumber.phoneNumber;
+    var phoneNumber = CallNumberStore.getPhoneNumber();
+    var args = {
+      number: phoneNumber,
+      numberSpaced: phoneNumber.replace(/(\d)(?=\d)/g, '$1 ')
+    };
 
-    AppStore.state.callNumber.text = 'Do you want to call ' + phoneNumber + '? Yes/No';
-    AppStore.emitChange();
+    Localizer.resolve('callNumber__doYouWantMeToCall', args).then((entity) => {
+      CallNumberStore.updateText(entity.value);
 
-    phoneNumber = phoneNumber.replace(/(\d)(?=\d)/g, '$1 ');
-
-    this.vaani.say('Do you want me to call ' + phoneNumber + '?', true);
+      this.vaani.say(entity.attrs.spoken, true);
+    });
   }
 
   /**
    * Interprets the result of speech recognition
    * @param err {Error|null} An error if speech was not understood
    * @param command {String} Text returned from the speech recognition
+   * @private
    */
   static _interpreter (err, command) {
     debug('_interpreter', arguments);
@@ -61,13 +62,17 @@ class CallNumberActions {
     if (err) {
       debug('_interpreter error', err);
 
-      this.vaani.say('I didn\'t understand, say again.', true);
+      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
+        CallNumberStore.updateText(entity.value);
+
+        this.vaani.say(entity.value.spoken, true);
+      });
 
       return;
     }
 
     if (command.indexOf('yes') > -1) {
-      var phoneNumber = AppStore.state.callNumber.phoneNumber;
+      var phoneNumber = CallNumberStore.getPhoneNumber();
 
       debug('dialing', phoneNumber);
 
@@ -106,6 +111,7 @@ class CallNumberActions {
    * @param sentence {String} The sentence to be spoken
    * @param waitForResponse {Boolean} Indicates if we will wait
    *        for a response after the sentence has been said
+   * @private
    */
   static _onSay (sentence, waitForResponse) {
     debug('_onSay', arguments);
@@ -119,6 +125,7 @@ class CallNumberActions {
    * @param sentence {String} The sentence to be spoken
    * @param waitForResponse {Boolean} Indicates if we will wait
    *        for a response after the sentence has been said
+   * @private
    */
   static _onSayDone (sentence, waitForResponse) {
     if (!waitForResponse) {
@@ -128,6 +135,7 @@ class CallNumberActions {
 
   /**
    * A hook that's fired when Vaani's listen function is called
+   * @private
    */
   static _onListen () {
     debug('_onListen');
@@ -137,6 +145,7 @@ class CallNumberActions {
 
   /**
    * A hook that's fired when Vaani's listen function is finished
+   * @private
    */
   static _onListenDone () {
   }
@@ -150,8 +159,8 @@ class CallNumberActions {
     if (this.vaani.isSpeaking || this.vaani.isListening) {
       this.vaani.cancel();
 
-      AppStore.state.callNumber.phoneNumber = '';
-      AppStore.state.callNumber.text = '';
+      CallNumberStore.updatePhoneNumber('');
+      CallNumberStore.updateText('');
 
       TalkieActions.setActiveAnimation('none');
       TalkieActions.setMode('none');

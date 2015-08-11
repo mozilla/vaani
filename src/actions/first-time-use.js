@@ -1,5 +1,5 @@
 import Debug from 'debug';
-import AppStore from '../stores/app';
+import FirstTimeUseStore from '../stores/first-time-use';
 import TalkieActions from './talkie';
 import ToolbarActions from './toolbar';
 
@@ -9,13 +9,28 @@ let debug = Debug('FirstTimeUseActions');
 
 class FirstTimeUseActions {
   /**
+   * Updates the launch count
+   */
+  static startTour () {
+    FirstTimeUseStore.updateTourInfo(1, true);
+  }
+
+  /**
+   * Updates the launch count
+   */
+  static updateLaunchCount (count) {
+    FirstTimeUseStore.updateLaunchCount(count);
+  }
+
+  /**
    * Advances the tour
    */
   static advanceTour () {
     debug('advanceTour');
 
-    var currentStep = AppStore.state.firstTimeUse.tour.current;
-    var totalSteps = AppStore.state.firstTimeUse.tour.total;
+    var tourInfo = FirstTimeUseStore.getTourInfo();
+    var currentStep = tourInfo.current;
+    var totalSteps = tourInfo.total;
     var toolbarActiveItem = 'none';
 
     if (currentStep === 1) {
@@ -26,20 +41,16 @@ class FirstTimeUseActions {
     }
 
     if (currentStep === totalSteps) {
-      AppStore.state.firstTimeUse.tour.current = 0;
-      AppStore.state.firstTimeUse.tour.inFlight = false;
+      FirstTimeUseStore.updateTourInfo(0, false);
 
       TalkieActions.setMode('idle');
     }
     else {
       currentStep += 1;
-      AppStore.state.firstTimeUse.tour.current = currentStep;
-      AppStore.state.firstTimeUse.tour.inFlight = true;
+      FirstTimeUseStore.updateTourInfo(currentStep, true);
     }
 
     ToolbarActions.setActiveItem(toolbarActiveItem);
-
-    AppStore.emitChange();
   }
 }
 

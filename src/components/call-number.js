@@ -1,5 +1,5 @@
 import GaiaComponent from 'gaia-component';
-import AppStore from '../stores/app';
+import CallNumberStore from '../stores/call-number';
 import CallNumberActions from '../actions/call-number';
 
 
@@ -13,17 +13,17 @@ var CallNumber = GaiaComponent.register('vaani-call-number', {
     CallNumberActions.setupSpeech();
   },
   attached: function () {
-    AppStore.addChangeListener(this.render.bind(this));
+    CallNumberStore.addChangeListener(this.render.bind(this));
 
     CallNumberActions.confirmNumber();
 
     this.render();
   },
   detached: function () {
-    AppStore.removeChangeListener(this.render.bind(this));
+    CallNumberStore.removeChangeListener(this.render.bind(this));
   },
   render: function () {
-    this.els.text.textContent = AppStore.state.callNumber.text;
+    this.els.text.textContent = CallNumberStore.getText();
   },
   toggleMic: function () {
     CallNumberActions.toggleMic();

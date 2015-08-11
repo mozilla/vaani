@@ -1,24 +1,29 @@
 import GaiaComponent from 'gaia-component';
-import AppStore from '../stores/app';
+import DisplayStore from '../stores/display';
 
 
 var Display = GaiaComponent.register('vaani-display', {
   created: function () {
     this.setupShadowRoot();
+
+    this.els = {};
+    this.els.content = this.shadowRoot.querySelector('.content');
   },
   attached: function () {
+    DisplayStore.addChangeListener(this.render.bind(this));
   },
   detached: function () {
+    DisplayStore.removeChangeListener(this.render.bind(this));
   },
-  changeViews: function (newView) {
-    var contentEl = this.shadowRoot.querySelector('.content');
+  render: function () {
+    var children = this.els.content.childNodes;
 
-    if (AppStore.state.display.activeView) {
-      contentEl.removeChild(AppStore.state.display.activeView);
+    for (let i = 0; i < children.length; i++) {
+      this.els.content.removeChild(children[i]);
     }
 
-    if (newView) {
-      contentEl.appendChild(newView);
+    if (DisplayStore.getActiveView()) {
+      this.els.content.appendChild(DisplayStore.getActiveView());
     }
   },
   template: `
