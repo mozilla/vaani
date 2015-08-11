@@ -1,6 +1,33 @@
+<general__iWasntAbleToUnderstand "I'm sorry, I wasn't able to understand."
+  spoken: "I'm sorry, I wasn't able to understand."
+>
+<general__iDidntUnderstandSayAgain "I didn't understand, say again."
+  spoken: "I didn't understand, say again."
+>
+
+
+<talkie__tapToGetStarted "Tap to get started.">
+
+
+<firstTimeUse__ok "Ok">
+<firstTimeUse__whatIsVaani "What is Vaani?">
+<firstTimeUse__whatIsVaaniContent "
+  Vaani is the voice recognition system that can do things for you.
+">
+<firstTimeUse__helpTheCommunity "Help the Community!">
+<firstTimeUse__helpTheCommunityContent "
+  You can help us improve Vaani's speech recognition by reading sentences.
+">
+<firstTimeUse__notSure "Not sure what to ask Vaani?">
+<firstTimeUse__notSureContent "
+  Find a list of everything you can say to Vaani here.
+">
+
+
 <help__whatCanIAsk "What can I ask?">
 <help__openApp "Open &lt;App&gt;">
 <help__callNumber "Call &lt;Number&gt;">
+
 
 <community__helpTheCommunity "Help the Community">
 <community__comingSoonContent "
@@ -8,4 +35,39 @@
   <p>Record yourself reading a sentence. The recording will then be submitted over wifi.</p>
   <p>That's it! We appreciate the help!</p>
   <p>(coming soon)</p>
+">
+
+
+<standingBy__howMayIHelpYou "How may I help you?">
+<standingBy__iCantFindThatApp "I can’t find {{ $app }}."
+  spoken: "I can’t find that app."
+>
+<standingBy__grammar "
+  #JSGF v1.0;
+  grammar fxosVoiceCommands;
+  <app> =
+    phone | messages | email | contacts | browser |
+    gallery | camera | marketplace | clock | settings |
+    calendar | music | video | calculator
+  ;
+  <digit> =
+    zero | o | one | two | three | four | five |
+    six | seven | eight | nine
+  ;
+  public <simple> =
+    open <app> |
+    call <digit>+
+  ;
+">
+
+
+<callNumber__doYouWantMeToCall "Do you want me to call {{ $number }}? Yes/No"
+  spoken: "Do you want me to call {{ $numberSpaced }}?"
+>
+<callNumber__grammar "
+  #JSGF v1.0;
+  grammar fxosVoiceCommands;
+  public <simple> =
+    yes | no
+  ;
 ">

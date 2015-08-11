@@ -10,21 +10,21 @@ var Community = GaiaComponent.register('vaani-community', {
     this.setupShadowRoot();
 
     this.dialog = this.shadowRoot.querySelector('gaia-dialog-alert');
-
-    Localizer.localize(this.shadowRoot);
   },
   attached: function () {
     this.dialog.open();
     this.dialog.addEventListener('closed', this.onClose.bind(this));
 
-    Localizer.addChangeListener(this.render.bind(this));
+    Localizer.addChangeListener(this.localize.bind(this));
+
+    this.localize();
   },
   detached: function () {
     this.dialog.removeEventListener('closed', this.onClose.bind(this));
 
-    Localizer.removeChangeListener(this.render.bind(this));
+    Localizer.removeChangeListener(this.localize.bind(this));
   },
-  render: function () {
+  localize: function () {
     Localizer.localize(this.shadowRoot);
   },
   onClose: function () {

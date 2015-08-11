@@ -1,8 +1,10 @@
 import GaiaComponent from 'gaia-component';
+import Localizer from '../lib/localizer';
 import GetUserMedia from 'getusermedia';
 import AttachMediaStream from 'attachmediastream';
 import Hark from 'hark';
-import AppStore from '../stores/app';
+import FirstTimeUseStore from '../stores/first-time-use';
+import TalkieStore from '../stores/talkie';
 import TalkieActions from '../actions/talkie';
 
 
@@ -23,7 +25,8 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     this.els.mic.addEventListener('touchend', this.tapMic.bind(this));
     this.els.mic.addEventListener('click', this.toggleMic.bind(this));
 
-    AppStore.addChangeListener(this.render.bind(this));
+    TalkieStore.addChangeListener(this.render.bind(this));
+    Localizer.addChangeListener(this.localize.bind(this));
 
     GetUserMedia({ audio: true, video: false }, (err, stream) => {
       if (err) {
@@ -39,18 +42,20 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
       this.speechEvents.on('volume_change', this._onVolumeChange.bind(this));
     });
 
+    this.localize();
     this.render();
   },
   detached: function () {
     this.els.mic.removeEventListener('touchend', this.tapMic.bind(this));
     this.els.mic.removeEventListener('click', this.toggleMic.bind(this));
 
-    AppStore.removeChangeListener(this.render.bind(this));
+    TalkieStore.removeChangeListener(this.render.bind(this));
+    Localizer.removeChangeListener(this.localize.bind(this));
 
     this.speechEvents.off('volume_change', this._onVolumeChange.bind(this));
   },
   _onVolumeChange: function (volume, threshold) {
-    if (AppStore.state.talkie.activeAnimation !== 'receiving') {
+    if (TalkieStore.getActiveAnimation() !== 'receiving') {
       return;
     }
 
@@ -90,19 +95,25 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
       }
     }
   },
+  localize: function () {
+    Localizer.localize(this.shadowRoot);
+  },
   render: function () {
-    if (AppStore.state.talkie.mode === 'idle') {
+    var mode = TalkieStore.getMode();
+    var activeAnimation = TalkieStore.getActiveAnimation();
+
+    if (mode === 'idle') {
       this.els.idlePopup.style.display = 'block';
     }
     else {
       this.els.idlePopup.style.display = 'none';
     }
 
-    if (AppStore.state.talkie.activeAnimation === 'receiving') {
+    if (activeAnimation === 'receiving') {
       this.els.sending.style.display = 'none';
       this.els.receiving.style.display = 'block';
     }
-    else if (AppStore.state.talkie.activeAnimation === 'sending') {
+    else if (activeAnimation === 'sending') {
       this.els.sending.style.display = 'block';
       this.els.receiving.style.display = 'none';
     }
@@ -116,8 +127,12 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
     e.target.click();
   },
   toggleMic: function () {
-    if (AppStore.state.firstTimeUse.tour.inFlight) {
+    if (FirstTimeUseStore.getTourInfo().inFlight) {
       return;
+    }
+
+    if (TalkieStore.getMode() === 'idle') {
+      TalkieActions.setMode('none');
     }
 
     TalkieActions.toggleMic();
@@ -127,7 +142,7 @@ var Talkie = GaiaComponent.register('vaani-talkie', {
       <div class="content">
         <div class="idle-popup">
           <div class="idle-popup-container">
-            <p class="message">Tap or say "Yo Vaani" to get started.</p>
+            <p class="message" data-l10n-id="talkie__tapToGetStarted"></p>
           </div>
           <div class="arrow-down"></div>
         </div>

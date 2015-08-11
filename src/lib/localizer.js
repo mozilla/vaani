@@ -12,11 +12,6 @@ let supportedLocales = ['en-US', 'es-ES', 'fr'];
 let env = new Env(defaultLang, Fetch.bind(null, null));
 let ctx = env.createContext(['locales/{locale}.l20n']);
 let prioritizedLangs = [];
-let entities = [
-  'help__whatCanIAsk', 'help__openApp', 'help__callNumber',
-  'community__helpTheCommunity', 'community__comingSoonContent'
-];
-let translations = {};
 
 
 class Localizer {
@@ -30,27 +25,10 @@ class Localizer {
     debug('start', arguments);
 
     this._prioritizeLocales();
-    this._fetch(prioritizedLangs).then(callback);
+    ctx.fetch(prioritizedLangs).then(callback);
 
     window.addEventListener('languagechange', this._onLangChange.bind(this));
     document.addEventListener('additionallanguageschange', this._onLangChange.bind(this));
-  }
-
-  /**
-   * Fetches resource files and resolves entities
-   * @private
-   * @return {Promise}
-   */
-  static _fetch () {
-    debug('_fetch');
-
-    return ctx.fetch(prioritizedLangs).then(() => {
-      return this.resolve(entities).then((values) => {
-        entities.forEach((entity, index) => {
-          translations[entity] = values[index];
-        });
-      });
-    });
   }
 
   /**
@@ -86,40 +64,26 @@ class Localizer {
     debug('_onLangChange', navigator.languages);
 
     this._prioritizeLocales();
-    this._fetch(prioritizedLangs).then(this.emitChange);
+    ctx.fetch(prioritizedLangs).then(this.emitChange);
   }
 
   /**
    * A shortcut for resolving entities.
-   * TODO Reza: extend functionality for entity arguments
-   * @param entity {String|Array<String>} The entity to resolve
+   * TODO Reza: extend functionality for entity arguments when passing an Array
+   * @param entity {String|Array<String>} Either a String representing the
+   *               entity to resolve or an Array of strings.
+   * @param args {Object} Optional. When the `entity` argument is a String, the
+   *             objecet of arguments passed to resolve.
    * @return {Promise}
    */
-  static resolve (entity) {
+  static resolve (entity, args = {}) {
     debug('resolve', arguments);
 
     if (Object.prototype.toString.call(entity) === '[object Array]') {
       return Promise.all(entity.map(ctx.resolve.bind(ctx, prioritizedLangs)));
     }
     else {
-      return ctx.resolve(prioritizedLangs, entity);
-    }
-  }
-
-  /**
-   * A getter for translations
-   * @param key {String} The property to get
-   * @return {Object} The value from translations or the literal value of `key`
-   *                  if not found.
-   */
-  static get (key) {
-    debug('get', arguments);
-
-    if (translations.hasOwnProperty(key)) {
-      return translations[key];
-    }
-    else {
-      return { value: key };
+      return ctx.resolve(prioritizedLangs, entity, args);
     }
   }
 
@@ -135,21 +99,18 @@ class Localizer {
     for (let i = 0; i < l10nEls.length; i++) {
       let el = l10nEls[i];
       let key = el.getAttribute('data-l10n-id');
-      let translation = this.get(key);
 
-      if (!translation) {
-        return;
-      }
+      this.resolve(key).then((entity) => {
+        el.innerHTML = entity.value;
 
-      el.innerHTML = translation.value;
-
-      // TODO Reza: The attribute names here need logic from l20n that
-      //            translate camelCase into attribute-case
-      if (translation.attrs) {
-        for (let attr in translation.attrs) {
-          el.setAttribute(attr, translation.attrs[attr]);
+        // TODO Reza: The attribute names here need logic from l20n that
+        //            translate camelCase into attribute-case
+        if (entity.attrs) {
+          for (let attr in entity.attrs) {
+            el.setAttribute(attr, entity.attrs[attr]);
+          }
         }
-      }
+      });
     }
   }
 

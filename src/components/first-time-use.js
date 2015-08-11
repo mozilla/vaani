@@ -1,5 +1,6 @@
 import GaiaComponent from 'gaia-component';
-import AppStore from '../stores/app';
+import Localizer from '../lib/localizer';
+import FirstTimeUseStore from '../stores/first-time-use';
 import FirstTimeUseActions from '../actions/first-time-use';
 
 
@@ -21,10 +22,12 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
       btn.addEventListener('click', this.nextStep.bind(this));
     }
 
-    AppStore.addChangeListener(this.render.bind(this));
+    FirstTimeUseStore.addChangeListener(this.render.bind(this));
+    Localizer.addChangeListener(this.localize.bind(this));
 
     this.isAttached = true;
 
+    this.localize();
     this.render();
   },
   detached: function () {
@@ -33,10 +36,15 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
       btn.removeEventListener('click', this.nextStep.bind(this));
     }
 
-    AppStore.removeChangeListener(this.render.bind(this));
+    FirstTimeUseStore.removeChangeListener(this.render.bind(this));
+    Localizer.removeChangeListener(this.localize.bind(this));
+  },
+  localize: function () {
+    Localizer.localize(this.shadowRoot);
   },
   render: function () {
-    var currentStep = AppStore.state.firstTimeUse.tour.current;
+    var tourInfo = FirstTimeUseStore.getTourInfo();
+    var currentStep = tourInfo.current;
 
     this.els.step1.style.display = currentStep === 1 ? 'block' : 'none';
     this.els.step2.style.display = currentStep === 2 ? 'block' : 'none';
@@ -64,22 +72,22 @@ var FirstTimeUse = GaiaComponent.register('vaani-first-time-use', {
       <div class="arrow-up"></div>
       <div class="container">
         <div class="step-1">
-          <h3 class="title">What is Vaani?</h3>
-          <p class="message">Vaani is the voice recognition system that can do things for you.</p>
+          <h3 class="title" data-l10n-id="firstTimeUse__whatIsVaani"></h3>
+          <p class="message" data-l10n-id="firstTimeUse__whatIsVaaniContent"></p>
           <hr />
-          <button class="btn">Ok</button>
+          <button class="btn" data-l10n-id="firstTimeUse__ok"></button>
         </div>
         <div class="step-2">
-          <h3 class="title">Help the Community!</h3>
-          <p class="message">You can help us improve Vaani's speech recognition by reading sentences.</p>
+          <h3 class="title" data-l10n-id="firstTimeUse__helpTheCommunity"></h3>
+          <p class="message" data-l10n-id="firstTimeUse__helpTheCommunityContent"></p>
           <hr />
-          <button class="btn">Ok</button>
+          <button class="btn" data-l10n-id="firstTimeUse__ok"></button>
         </div>
         <div class="step-3">
-          <h3 class="title">Not sure what to ask Vaani?</h3>
-          <p class="message">Find a list of everything you can say to Vaani here.</p>
+          <h3 class="title" data-l10n-id="firstTimeUse__notSure"></h3>
+          <p class="message" data-l10n-id="firstTimeUse__notSureContent"></p>
           <hr />
-          <button class="btn">Ok</button>
+          <button class="btn" data-l10n-id="firstTimeUse__ok"></button>
         </div>
       </div>
       <div class="arrow-down"></div>

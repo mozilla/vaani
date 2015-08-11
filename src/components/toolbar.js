@@ -1,5 +1,6 @@
 import GaiaComponent from 'gaia-component';
-import AppStore from '../stores/app';
+import ToolbarStore from '../stores/toolbar';
+import FirstTimeUseStore from '../stores/first-time-use';
 import DisplayActions from '../actions/display';
 import ToolbarActions from '../actions/toolbar';
 
@@ -18,7 +19,7 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
     this.els.community.addEventListener('click', this.toggleCommunity.bind(this));
     this.els.help.addEventListener('click', this.toggleHelp.bind(this));
 
-    AppStore.addChangeListener(this.render.bind(this));
+    ToolbarStore.addChangeListener(this.render.bind(this));
 
     this.render();
   },
@@ -26,14 +27,16 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
     this.els.community.removeEventListener('click', this.toggleCommunity.bind(this));
     this.els.help.removeEventListener('click', this.toggleHelp.bind(this));
 
-    AppStore.removeChangeListener(this.render.bind(this));
+    ToolbarStore.removeChangeListener(this.render.bind(this));
   },
   render: function () {
-    if (AppStore.state.toolbar.activeItem === 'community') {
+    var activeItem = ToolbarStore.getActiveItem();
+
+    if (activeItem === 'community') {
       this.els.communityImg.src = this.els.communityImg.dataset.srcActive;
       this.els.helpImg.src = this.els.helpImg.dataset.srcInactive;
     }
-    else if (AppStore.state.toolbar.activeItem === 'help') {
+    else if (activeItem === 'help') {
       this.els.communityImg.src = this.els.communityImg.dataset.srcInactive;
       this.els.helpImg.src = this.els.helpImg.dataset.srcActive;
     }
@@ -43,21 +46,21 @@ var Toolbar = GaiaComponent.register('vaani-toolbar', {
     }
   },
   toggleCommunity: function () {
-    if (AppStore.state.firstTimeUse.tour.inFlight) {
+    if (FirstTimeUseStore.getTourInfo().inFlight) {
       return;
     }
 
-    var isSelected = AppStore.state.toolbar.activeItem === 'community';
+    var isSelected = ToolbarStore.getActiveItem() === 'community';
     ToolbarActions.setActiveItem(isSelected ? 'none' : 'community');
 
     DisplayActions.changeViews('vaani-community');
   },
   toggleHelp: function () {
-    if (AppStore.state.firstTimeUse.tour.inFlight) {
+    if (FirstTimeUseStore.getTourInfo().inFlight) {
       return;
     }
 
-    var isSelected = AppStore.state.toolbar.activeItem === 'help';
+    var isSelected = ToolbarStore.getActiveItem() === 'help';
     ToolbarActions.setActiveItem(isSelected ? 'none' : 'help');
 
     DisplayActions.changeViews('vaani-help');
