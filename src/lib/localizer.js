@@ -71,9 +71,9 @@ class Localizer {
    * A shortcut for resolving entities.
    * TODO Reza: extend functionality for entity arguments when passing an Array
    * @param entity {String|Array<String>} Either a String representing the
-   *               entity to resolve or an Array of strings.
+   *        entity to resolve or an Array of strings.
    * @param args {Object} Optional. When the `entity` argument is a String, the
-   *             objecet of arguments passed to resolve.
+   *        objecet of arguments passed to resolve.
    * @return {Promise}
    */
   static resolve (entity, args = {}) {
