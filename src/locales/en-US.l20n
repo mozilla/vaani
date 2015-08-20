@@ -51,7 +51,7 @@
     calendar | music | video | calculator
   ;
   <digit> =
-    zero | o | one | two | three | four | five |
+    zero | /0.001/ ow | one | two | three | four | five |
     six | seven | eight | nine
   ;
   public <simple> =
