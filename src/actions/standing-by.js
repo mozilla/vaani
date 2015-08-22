@@ -1,4 +1,5 @@
 import Debug from 'debug';
+import AppStore from '../stores/app';
 import CallNumberStore from '../stores/call-number';
 import StandingByStore from '../stores/standing-by';
 import Localizer from '../lib/localizer';
@@ -7,6 +8,9 @@ import AppLauncher from '../lib/app-launcher';
 import Dialer from '../lib/dialer';
 import DisplayActions from './display';
 import TalkieActions from './talkie';
+import 'string.prototype.startswith';
+import 'string.prototype.endswith';
+import 'string.prototype.includes';
 
 
 let debug = Debug('StandingByActions');
@@ -19,7 +23,13 @@ class StandingByActions {
   static setupSpeech () {
     debug('setupSpeech');
 
-    Localizer.resolve('standingBy__grammar').then((grammarEntity) => {
+    var args = {
+      appsGrammar: AppStore.getAppsGrammar()
+    };
+
+    Localizer.resolve('standingBy__grammar', args).then((grammarEntity) => {
+      debug('setupSpeech:grammar', grammarEntity.value);
+
       this.vaani = new Vaani({
         grammar: grammarEntity.value,
         interpreter: this._interpreter.bind(this),
@@ -55,7 +65,7 @@ class StandingByActions {
     TalkieActions.setActiveAnimation('none');
 
     if (err) {
-      debug('_interpreter error', err);
+      debug('_interpreter:error', err);
 
       Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
         this.vaani.say(entity.attrs.spoken, true);
@@ -66,105 +76,79 @@ class StandingByActions {
       return;
     }
 
-    if (command.indexOf('call') > -1) {
-      var phoneNumber = Dialer.wordsToDigits(command);
+    Localizer.resolve([
+      'standingBy__openCommand',
+      'standingBy__openCommandCue',
+      'standingBy__callCommand',
+      'standingBy__callCommandCue',
+      'standingBy__specialAppPhone',
+      'standingBy__specialAppContacts'
+    ]).then((entities) => {
+      var openCommand = entities[0].value;
+      var openCommandCue = entities[1].value;
+      var callCommand = entities[2].value;
+      var callCommandCue = entities[3].value;
+      var specialAppPhone = entities[4].value;
+      var specialAppContacts = entities[5].value;
 
-      CallNumberStore.updatePhoneNumber(phoneNumber);
+      if (command[callCommandCue](callCommand)) {
+        var phoneNumber = Dialer.wordsToDigits(command);
 
-      DisplayActions.changeViews('vaani-call-number');
-    }
-    else if (command.indexOf('open') > -1) {
-      var appRequested, appToLaunch, entryPoint;
+        CallNumberStore.updatePhoneNumber(phoneNumber);
 
-      if (command.indexOf('phone') > -1) {
-        appRequested = 'phone';
-        appToLaunch = 'communications';
-        entryPoint = 'dialer';
+        DisplayActions.changeViews('vaani-call-number');
       }
-      else if (command.indexOf('messages') > -1) {
-        appToLaunch = 'messages';
-      }
-      else if (command.indexOf('email') > -1) {
-        appToLaunch = 'e-mail';
-      }
-      else if (command.indexOf('contacts') > -1) {
-        appRequested = 'contacts';
-        appToLaunch = 'communications';
-        entryPoint = 'contacts';
-      }
-      else if (command.indexOf('browser') > -1) {
-        appToLaunch = 'browser';
-      }
-      else if (command.indexOf('gallery') > -1) {
-        appToLaunch = 'gallery';
-      }
-      else if (command.indexOf('camera') > -1) {
-        appToLaunch = 'camera';
-      }
-      else if (command.indexOf('marketplace') > -1) {
-        appToLaunch = 'marketplace';
-      }
-      else if (command.indexOf('clock') > -1) {
-        appToLaunch = 'clock';
-      }
-      else if (command.indexOf('settings') > -1) {
-        appToLaunch = 'settings';
-      }
-      else if (command.indexOf('calendar') > -1) {
-        appToLaunch = 'calendar';
-      }
-      else if (command.indexOf('music') > -1) {
-        appToLaunch = 'music';
-      }
-      else if (command.indexOf('video') > -1) {
-        appToLaunch = 'video';
-      }
-      else if (command.indexOf('calculator') > -1) {
-        appToLaunch = 'calculator';
+      else if (command[openCommandCue](openCommand)) {
+        var appRequested, appToLaunch, entryPoint;
+
+        if (openCommandCue === 'startsWith') {
+          appRequested = command.substring(openCommand.length + 1);
+        }
+        else {
+          appRequested = command.substring(0, command.length - (openCommand.length + 1));
+        }
+
+        appToLaunch = appRequested;
+
+        if (command.includes(specialAppPhone)) {
+          appRequested = 'phone';
+          appToLaunch = 'communications';
+          entryPoint = 'dialer';
+        }
+        else if (command.includes(specialAppContacts)) {
+          appRequested = 'contacts';
+          appToLaunch = 'communications';
+          entryPoint = 'contacts';
+        }
+
+        AppLauncher.launch(appToLaunch, entryPoint, (err) => {
+          if (err) {
+            debug('AppLauncher error', err);
+
+            var args = {app: appRequested};
+
+            Localizer.resolve('standingBy__iCantFindThatApp', args).then((entity) => {
+              this.vaani.say(entity.attrs.spoken);
+
+              StandingByStore.updateText(entity.value);
+            });
+
+            return;
+          }
+
+          StandingByStore.updateText('');
+        });
       }
       else {
-        debug('Unable to interpret open command.', command);
+        debug('Unable to match interpretation');
 
-        var args = {app: appRequested};
-
-        Localizer.resolve('standingBy__iCantFindThatApp', args).then((entity) => {
+        Localizer.resolve('general__iWasntAbleToUnderstand').then((entity) => {
           this.vaani.say(entity.attrs.spoken);
 
           StandingByStore.updateText(entity.value);
         });
-
-        return;
       }
-
-      appRequested = appRequested || appToLaunch;
-
-      AppLauncher.launch(appToLaunch, entryPoint, (err) => {
-        if (err) {
-          debug('AppLauncher error', err);
-
-          var args = {app: appRequested};
-
-          Localizer.resolve('standingBy__iCantFindThatApp', args).then((entity) => {
-            this.vaani.say(entity.attrs.spoken);
-
-            StandingByStore.updateText(entity.value);
-          });
-
-          return;
-        }
-
-        StandingByStore.updateText('');
-      });
-    }
-    else {
-      debug('Unable to match interpretation');
-
-      Localizer.resolve('general__iWasntAbleToUnderstand').then((entity) => {
-        this.vaani.say(entity.attrs.spoken);
-
-        StandingByStore.updateText(entity.value);
-      });
-    }
+    });
   }
 
   /**

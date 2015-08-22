@@ -1,5 +1,6 @@
 /* global speechSynthesis, SpeechGrammarList, SpeechRecognition, SpeechSynthesisUtterance */
 import Debug from 'debug';
+import Localizer from './localizer';
 
 
 let debug = Debug('Vaani');
@@ -66,7 +67,7 @@ class Vaani {
     this.isSpeaking = true;
     this._synthesisWasCanceled = false;
 
-    var lang = 'en'; // Aus: should be detected based on system language
+    var lang = Localizer.getPriorityLang();
     var sayItProud;
 
     // Reza: This is a temporary solution to help dev in the browser

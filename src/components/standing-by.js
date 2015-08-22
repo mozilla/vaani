@@ -1,4 +1,5 @@
 import GaiaComponent from 'gaia-component';
+import AppStore from '../stores/app';
 import StandingByStore from '../stores/standing-by';
 import StandingByActions from '../actions/standing-by';
 
@@ -14,6 +15,7 @@ var StandingBy = GaiaComponent.register('vaani-standing-by', {
   },
   attached: function () {
     StandingByStore.addChangeListener(this.render.bind(this));
+    AppStore.addChangeListener(this._updateSpeach.bind(this));
 
     StandingByActions.greetUser();
 
@@ -21,6 +23,10 @@ var StandingBy = GaiaComponent.register('vaani-standing-by', {
   },
   detached: function () {
     StandingByStore.removeChangeListener(this.render.bind(this));
+    AppStore.removeChangeListener(this._updateSpeach.bind(this));
+  },
+  _updateSpeach: function () {
+    StandingByActions.setupSpeech();
   },
   render: function () {
     this.els.text.textContent = StandingByStore.getText();

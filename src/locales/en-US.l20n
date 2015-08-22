@@ -42,14 +42,19 @@
 <standingBy__iCantFindThatApp "I can’t find {{ $app }}."
   spoken: "I can’t find that app."
 >
+<standingBy__openCommand "open">
+<standingBy__openCommandCue "startsWith">
+<standingBy__callCommand "call">
+<standingBy__callCommandCue "startsWith">
+<standingBy__specialAppPhone "phone">
+<standingBy__specialAppContacts "contacts">
 <standingBy__grammar "
   #JSGF v1.0;
   grammar fxosVoiceCommands;
   <app> =
-    phone | messages | email | contacts | browser |
-    gallery | camera | marketplace | clock | settings |
-    calendar | music | video | calculator
-  ;
+    {{ standingBy__specialAppPhone }} |
+    {{ standingBy__specialAppContacts }} |
+    {{ $appsGrammar }};
   <digit> =
     zero | /0.001/ ow | one | two | three | four | five |
     six | seven | eight | nine
