@@ -24,7 +24,7 @@ class StandingByActions {
     debug('setupSpeech');
 
     var args = {
-      appsGrammar: AppStore.getAppsGrammar()
+      appsGrammar: AppStore.getAppsGrammar() || 'unavailable'
     };
 
     Localizer.resolve('standingBy__grammar', args).then((grammarEntity) => {
