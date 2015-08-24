@@ -5,27 +5,35 @@ import { Env, fetch as Fetch } from 'l20n';
 
 
 let debug = Debug('Localizer');
-let emitter = new EventEmitter2();
 let CHANGE_EVENT = 'change';
-let defaultLang = 'en-US';
-let supportedLocales = ['en-US', 'es-ES', 'fr'];
-let env = new Env(defaultLang, Fetch.bind(null, null));
-let ctx = env.createContext(['locales/{locale}.l20n']);
-let prioritizedLangs = [];
 
 
 class Localizer {
+  /**
+   * @constructor
+   */
+  constructor () {
+    this.defaultLang = 'en-US';
+    this.supportedLocales = ['en-US', 'es-ES', 'fr'];
+    this.prioritizedLangs = [];
+
+    this._env = new Env(this.defaultLang, Fetch.bind(null, null));
+    this._ctx = this._env.createContext(['locales/{locale}.l20n']);
+
+    this._emitter = new EventEmitter2();
+  }
+
   /**
    * Starts the localization logic by doing the initial l20n fetching and
    * listening for relevant events on the window when language options change
    * @param callback {Function} The function to callback after we've fetched
    *        langs and built our localized entities
    */
-  static start (callback) {
+  start (callback) {
     debug('start', arguments);
 
     this._prioritizeLocales();
-    ctx.fetch(prioritizedLangs).then(callback);
+    this._ctx.fetch(this.prioritizedLangs).then(callback);
 
     window.addEventListener('languagechange', this._onLangChange.bind(this));
     document.addEventListener('additionallanguageschange', this._onLangChange.bind(this));
@@ -39,19 +47,19 @@ class Localizer {
    * also produces the value for the `prioritizedLangs` array.
    * @private
    */
-  static _prioritizeLocales () {
+  _prioritizeLocales () {
     debug('_prioritizeLocales');
 
     for (let i = 0; i < navigator.languages.length; i++) {
-      let idx = supportedLocales.indexOf(navigator.languages[i]);
+      let idx = this.supportedLocales.indexOf(navigator.languages[i]);
       if (idx !== -1) {
-        let supportedLocale = supportedLocales.splice(idx, 1);
-        supportedLocales.unshift(supportedLocale.pop());
+        let supportedLocale = this.supportedLocales.splice(idx, 1);
+        this.supportedLocales.unshift(supportedLocale.pop());
         break;
       }
     }
 
-    prioritizedLangs = supportedLocales.map((lang) => {
+    this.prioritizedLangs = this.supportedLocales.map((lang) => {
       return {code: lang, src: 'app'};
     });
   }
@@ -60,11 +68,11 @@ class Localizer {
    * Language change handler
    * @private
    */
-  static _onLangChange () {
+  _onLangChange () {
     debug('_onLangChange', navigator.languages);
 
     this._prioritizeLocales();
-    ctx.fetch(prioritizedLangs).then(this.emitChange);
+    this._ctx.fetch(this.prioritizedLangs).then(this.emitChange.bind(this));
   }
 
   /**
@@ -76,14 +84,14 @@ class Localizer {
    *        objecet of arguments passed to resolve.
    * @return {Promise}
    */
-  static resolve (entity, args = {}) {
+  resolve (entity, args = {}) {
     debug('resolve', arguments);
 
     if (Object.prototype.toString.call(entity) === '[object Array]') {
-      return Promise.all(entity.map(ctx.resolve.bind(ctx, prioritizedLangs)));
+      return Promise.all(entity.map(this._ctx.resolve.bind(this._ctx, this.prioritizedLangs)));
     }
     else {
-      return ctx.resolve(prioritizedLangs, entity, args);
+      return this._ctx.resolve(this.prioritizedLangs, entity, args);
     }
   }
 
@@ -91,7 +99,7 @@ class Localizer {
    * Localizes a document or shadow root
    * @param doc {document|shadowRoot} An object with a querySelectorAll interface
    */
-  static localize (doc) {
+  localize (doc) {
     debug('localize', arguments);
 
     let l10nEls = doc.querySelectorAll('[data-l10n-id]');
@@ -115,34 +123,52 @@ class Localizer {
   }
 
   /**
+   * Gets the highest priority locale
+   */
+  getPriorityLocale () {
+    debug('getPriorityLocale');
+
+    return this.supportedLocales[0];
+  }
+
+  /**
+   * Gets the highest priority lang from the highest priority locale
+   */
+  getPriorityLang () {
+    debug('getPriorityLocale');
+
+    return this.supportedLocales[0].split('-')[0];
+  }
+
+  /**
    * Emits a change event
    */
-  static emitChange () {
+  emitChange () {
     debug('emitChange');
 
-    emitter.emit(CHANGE_EVENT);
+    this._emitter.emit(CHANGE_EVENT);
   }
 
   /**
    * Adds a change listener to the emitter
    * @param func {Function} The function to add
    */
-  static addChangeListener (func) {
+  addChangeListener (func) {
     debug('addChangeListener', arguments);
 
-    emitter.addListener(CHANGE_EVENT, func);
+    this._emitter.addListener(CHANGE_EVENT, func);
   }
 
   /**
    * Adds a change listener to the emitter
    * @param func {Function} The function to remove
    */
-  static removeChangeListener (func) {
+  removeChangeListener (func) {
     debug('removeChangeListener', arguments);
 
-    emitter.removeListener(CHANGE_EVENT, func);
+    this._emitter.removeListener(CHANGE_EVENT, func);
   }
 }
 
 
-export default Localizer;
+export default new Localizer();

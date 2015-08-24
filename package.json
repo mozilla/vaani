@@ -44,6 +44,9 @@
     "lab-babel": "^1.1.0",
     "pre-commit": "^1.0.10",
     "proxyquire": "^1.6.0",
+    "string.prototype.endswith": "^0.2.0",
+    "string.prototype.includes": "^1.0.0",
+    "string.prototype.startswith": "^0.2.0",
     "watch": "^0.16.0"
   },
   "pre-commit": [
