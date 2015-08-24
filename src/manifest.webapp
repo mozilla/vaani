@@ -39,6 +39,9 @@
     },
     "audio-capture" : {
       "description" : "Audio capture for speech recognition"
+    },
+    "moz-extremely-unstable-and-will-change-webcomponents": {
+      "description": "Use web components"
     }
   }
 }
