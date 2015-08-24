@@ -72,6 +72,7 @@ http://about:config
 
 | preference                               | type    | value |
 |:---------------------------------------- |:------- |:----- |
+| dom.webcomponents.enabled                | boolean | true  |
 | media.webspeech.recognition.enable       | boolean | true  |
 | media.webspeech.recognition.force_enable | boolean | true  |
 | media.webspeech.synth.enabled            | boolean | true  |
