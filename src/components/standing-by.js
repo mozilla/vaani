@@ -10,14 +10,14 @@ var StandingBy = GaiaComponent.register('vaani-standing-by', {
 
     this.els = {};
     this.els.text = this.shadowRoot.querySelector('.text');
-
-    StandingByActions.setupSpeech();
   },
   attached: function () {
     StandingByStore.addChangeListener(this.render.bind(this));
     AppStore.addChangeListener(this._updateSpeach.bind(this));
 
-    StandingByActions.greetUser();
+    StandingByActions.setupSpeech(() => {
+      StandingByActions.greetUser();
+    });
 
     this.render();
   },
@@ -26,7 +26,7 @@ var StandingBy = GaiaComponent.register('vaani-standing-by', {
     AppStore.removeChangeListener(this._updateSpeach.bind(this));
   },
   _updateSpeach: function () {
-    StandingByActions.setupSpeech();
+    StandingByActions.setupSpeech(() => {});
   },
   render: function () {
     this.els.text.textContent = StandingByStore.getText();

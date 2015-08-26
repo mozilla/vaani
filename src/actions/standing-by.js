@@ -1,11 +1,11 @@
 import Debug from 'debug';
 import AppStore from '../stores/app';
 import CallNumberStore from '../stores/call-number';
+import CallContactStore from '../stores/call-contact';
 import StandingByStore from '../stores/standing-by';
 import Localizer from '../lib/localizer';
 import Vaani from '../lib/vaani';
 import AppLauncher from '../lib/app-launcher';
-import Dialer from '../lib/dialer';
 import DisplayActions from './display';
 import TalkieActions from './talkie';
 import 'string.prototype.startswith';
@@ -20,24 +20,52 @@ class StandingByActions {
   /**
    * Initializes a Vaani instance
    */
-  static setupSpeech () {
+  static setupSpeech (callback) {
     debug('setupSpeech');
 
-    var args = {
-      appsGrammar: AppStore.getAppsGrammar() || 'unavailable'
-    };
+    Localizer.resolve([
+      'standingBy__openCommand',
+      'standingBy__callCommand',
+      'standingBy__dialCommand',
+      'standingBy__specialAppPhone',
+      'standingBy__specialAppContacts'
+    ]).then((entities) => {
+      var openCommand = entities[0].value;
+      var callCommand = entities[1].value;
+      var dialCommand = entities[2].value;
+      var specialAppPhone = entities[3].value;
+      var specialAppContacts = entities[4].value;
+      var appsGrammar = AppStore.getAppsGrammar() || 'unavailable';
+      var contactsGrammar = AppStore.getContactsGrammar() || 'unknown';
+      var grammar = `
+          #JSGF v1.0;
+          grammar fxosVoiceCommands;
+          <app> =
+            ${ specialAppPhone } |
+            ${ specialAppContacts } |
+            ${ appsGrammar }
+          ;
+          <contact> = ${ contactsGrammar };
+          <digit> = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+          public <simple> =
+            ${ openCommand } <app> |
+            ${ dialCommand } <digit>+ |
+            ${ callCommand } <contact>
+          ;
+      `;
 
-    Localizer.resolve('standingBy__grammar', args).then((grammarEntity) => {
-      debug('setupSpeech:grammar', grammarEntity.value);
+      debug('setupSpeech:grammar', grammar);
 
       this.vaani = new Vaani({
-        grammar: grammarEntity.value,
+        grammar: grammar,
         interpreter: this._interpreter.bind(this),
         onSay: this._onSay.bind(this),
         onSayDone: this._onSayDone.bind(this),
         onListen: this._onListen.bind(this),
         onListenDone: this._onListenDone.bind(this)
       });
+
+      callback();
     });
   }
 
@@ -81,24 +109,66 @@ class StandingByActions {
       'standingBy__openCommandCue',
       'standingBy__callCommand',
       'standingBy__callCommandCue',
+      'standingBy__dialCommand',
+      'standingBy__dialCommandCue',
       'standingBy__specialAppPhone',
       'standingBy__specialAppContacts'
     ]).then((entities) => {
       var openCommand = entities[0].value;
-      var openCommandCue = entities[1].value;
+      var openCommandCue = entities[1].value === 'start' ? 'startsWith' : 'endsWith';
       var callCommand = entities[2].value;
-      var callCommandCue = entities[3].value;
-      var specialAppPhone = entities[4].value;
-      var specialAppContacts = entities[5].value;
+      var callCommandCue = entities[3].value === 'start' ? 'startsWith' : 'endsWith';
+      var dialCommand = entities[4].value;
+      var dialCommandCue = entities[5].value === 'start' ? 'startsWith' : 'endsWith';
+      var specialAppPhone = entities[6].value;
+      var specialAppContacts = entities[7].value;
 
-      if (command[callCommandCue](callCommand)) {
-        var phoneNumber = Dialer.wordsToDigits(command);
+      if (command[callCommandCue](callCommand) && navigator.mozContacts) {
+        debug('_interpreter:callCommand', command);
+
+        var contactRequested;
+
+        if (callCommandCue === 'startsWith') {
+          contactRequested = command.substring(callCommand.length + 1);
+        }
+        else {
+          contactRequested = command.substring(0, command.length - (callCommand.length + 1));
+        }
+
+        var options = {
+          filterBy: ['name'],
+          filterValue: contactRequested,
+          filterOp: 'equals',
+          filterLimit: 1
+        };
+
+        var search = navigator.mozContacts.find(options);
+
+        search.onsuccess = () => {
+          CallContactStore.updateContact(search.result[0]);
+
+          DisplayActions.changeViews('vaani-call-contact');
+        };
+      }
+      else if (command[dialCommandCue](dialCommand)) {
+        debug('_interpreter:dialCommand', command);
+
+        var phoneNumber;
+
+        if (dialCommandCue === 'startsWith') {
+          phoneNumber = command.substring(dialCommand.length + 1);
+        }
+        else {
+          phoneNumber = command.substring(0, command.length - (dialCommand.length + 1));
+        }
 
         CallNumberStore.updatePhoneNumber(phoneNumber);
 
         DisplayActions.changeViews('vaani-call-number');
       }
       else if (command[openCommandCue](openCommand)) {
+        debug('_interpreter:openCommand', command);
+
         var appRequested, appToLaunch, entryPoint;
 
         if (openCommandCue === 'startsWith') {

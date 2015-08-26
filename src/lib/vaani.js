@@ -133,16 +133,18 @@ class Vaani {
       this._onListen();
     }
 
-    this.alertStart.addEventListener('ended', () => {
+    this.alertStart.play();
+
+    setTimeout(() => {
       this.isListening = true;
       this.speechRecognition.start();
-    });
-    this.alertStart.play();
+    }, 100);
 
     this.speechRecognition.onresult = (event) => {
       this.isListening = false;
       this._interpretingCommand = false;
       this.alertStop.play();
+
       if (this._onListenDone) {
         this._onListenDone();
       }

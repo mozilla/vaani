@@ -8,7 +8,7 @@
     "lint": "eslint ./src/**/*.js",
     "test": "npm run lint && lab -t 80 -S -T ./node_modules/lab-babel ./test/jsdom-setup.js ./test/src/ ./test/jsdom-teardown.js",
     "start": "DEBUG=* http-server --ssl -p 8000 -c-1 ./build & watch 'npm run build' ./src",
-    "build": "mkdir -p ./build && browserify ./src/index.js -t babelify -o ./build/index.js && cat ./bower_components/gaia-theme/gaia-theme.css src/index.css > ./build/index.css  && cp ./src/index.html ./build && cp ./src/manifest.webapp ./build && cp -R ./src/assets ./build && cp -R ./src/locales ./build",
+    "build": "mkdir -p ./build && browserify ./src/index.js -t babelify -o ./build/index.js && cat ./bower_components/gaia-theme/gaia-theme.css src/index.css > ./build/index.css  && cp ./src/index.html ./build && cp ./src/manifest.webapp ./build && cp -R ./src/assets ./build && cp -R ./src/localization ./build",
     "clean": "rm -rf ./build"
   },
   "repository": {

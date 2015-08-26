@@ -1,7 +1,7 @@
 import BaseStore from '../lib/base-store';
 
 
-class CallStore extends BaseStore {
+class CallNumberStore extends BaseStore {
   /**
    * @constructor
    */
@@ -48,4 +48,4 @@ class CallStore extends BaseStore {
 }
 
 
-export default new CallStore();
+export default new CallNumberStore();
