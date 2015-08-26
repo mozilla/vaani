@@ -37,6 +37,10 @@ class Vaani {
     this.speechRecognition.grammars = this.speechGrammarList;
     this.isSpeaking = false;
     this.isListening = false;
+    this.alertStart = document.createElement('audio');
+    this.alertStart.src = '/assets/audios/alert_start.opus';
+    this.alertStop = document.createElement('audio');
+    this.alertStop.src = '/assets/audios/alert_end.opus';
     this._synthesisWasCanceled = false;
     this._interpreter = options.interpreter;
     this._onSay = options.onSay;
@@ -129,14 +133,16 @@ class Vaani {
       this._onListen();
     }
 
-    this.isListening = true;
-
-    this.speechRecognition.start();
+    this.alertStart.addEventListener('ended', () => {
+      this.isListening = true;
+      this.speechRecognition.start();
+    });
+    this.alertStart.play();
 
     this.speechRecognition.onresult = (event) => {
       this.isListening = false;
       this._interpretingCommand = false;
-
+      this.alertStop.play();
       if (this._onListenDone) {
         this._onListenDone();
       }
