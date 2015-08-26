@@ -13,6 +13,7 @@ import './components/talkie';
 import './components/toolbar';
 import './components/standing-by';
 import './components/call-number';
+import './components/call-contact';
 
 
 var debug = Debug('App');
@@ -98,7 +99,7 @@ class App {
     debug('_buildAppsGrammar');
 
     if (!navigator.mozApps || !navigator.mozApps.mgmt) {
-      debug('buildAppsGrammar', 'navigator.mozApps not found');
+      debug('_buildAppsGrammar', 'navigator.mozApps not found');
       return;
     }
 
@@ -147,7 +148,35 @@ class App {
    * @private
    */
   static _buildContactsGrammar () {
-    debug('buildContactsGrammar');
+    debug('_buildContactsGrammar');
+
+    if (!navigator.mozContacts) {
+      debug('_buildContactsGrammar', 'navigator.mozContacts not found');
+      return;
+    }
+
+    var names = [];
+    var request = window.navigator.mozContacts.getAll();
+
+    request.onsuccess = function () {
+      if (this.result) {
+        if (this.result.tel.length > 0) {
+          names.push(this.result.name);
+        }
+
+        // trigger request.onsuccess again with a new result
+        this.continue();
+      }
+      else {
+        var contactsGrammar = names.join(' | ');
+
+        if (names.length > 0) {
+          AppStore.updateContactsGrammar(contactsGrammar);
+        }
+
+        debug('_buildContactsGrammar:contactsGrammar', contactsGrammar);
+      }
+    };
   }
 }
 

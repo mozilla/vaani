@@ -1,16 +1,17 @@
 import Debug from 'debug';
-import CallNumberStore from '../stores/call-number';
+import CallContactStore from '../stores/call-contact';
+import Dialer from '../lib/dialer';
 import Localizer from '../lib/localizer';
 import Vaani from '../lib/vaani';
-import Dialer from '../lib/dialer';
 import DisplayActions from './display';
 import TalkieActions from './talkie';
+import 'string.prototype.includes';
 
 
-let debug = Debug('CallNumberActions');
+let debug = Debug('CallContactActions');
 
 
-class CallNumberActions {
+class CallContactActions {
   /**
    * Initializes a Vaani instance
    */
@@ -45,19 +46,19 @@ class CallNumberActions {
   }
 
   /**
-   * Asks the user to confirm the number and waits for a response
+   * Asks the user to confirm the contact and waits for a response
    */
-  static confirmNumber () {
-    debug('confirmNumber');
+  static confirmContact () {
+    debug('confirmContact');
 
-    var phoneNumber = CallNumberStore.getPhoneNumber();
+    var contact = CallContactStore.getContact();
+    debug('confirmContact:contact', contact);
     var args = {
-      number: phoneNumber,
-      numberSpaced: phoneNumber.replace(/(\d)(?=\d)/g, '$1 ')
+      contactName: contact && contact.name && contact.name[0] || undefined
     };
 
-    Localizer.resolve('callNumber__doYouWantMeToCall', args).then((entity) => {
-      CallNumberStore.updateText(entity.value);
+    Localizer.resolve('callContact__doYouWantMeToCall', args).then((entity) => {
+      CallContactStore.updateText(entity.value);
 
       this.vaani.say(entity.attrs.spoken, true);
     });
@@ -78,7 +79,7 @@ class CallNumberActions {
       debug('_interpreter error', err);
 
       Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
-        CallNumberStore.updateText(entity.value);
+        CallContactStore.updateText(entity.value);
 
         this.vaani.say(entity.attrs.spoken, true);
       });
@@ -91,7 +92,7 @@ class CallNumberActions {
       'general__noCommand',
       'general__ok',
       'general__iWasntAbleToUnderstand',
-      'callNumber__iWasntAbleToCall'
+      'callContact__iWasntAbleToCall'
     ]).then((entities) => {
       var yesCommand = entities[0].value;
       var noCommand = entities[1].value;
@@ -100,11 +101,11 @@ class CallNumberActions {
       var iWasntAbleToCall = entities[4];
 
       if (command.includes(yesCommand)) {
-        var phoneNumber = CallNumberStore.getPhoneNumber();
+        var contact = CallContactStore.getContact();
 
-        debug('dialing', phoneNumber);
+        debug('dialing', contact.tel[0].value);
 
-        Dialer.dial(phoneNumber, (err, call) => {
+        Dialer.dial(contact.tel[0].value, (err, call) => {
           if (err) {
             debug('Dialer error', err);
 
@@ -188,8 +189,8 @@ class CallNumberActions {
     if (this.vaani.isSpeaking || this.vaani.isListening) {
       this.vaani.cancel();
 
-      CallNumberStore.updatePhoneNumber('');
-      CallNumberStore.updateText('');
+      CallContactStore.updateContact(undefined);
+      CallContactStore.updateText('');
 
       TalkieActions.setActiveAnimation('none');
       TalkieActions.setMode('none');
@@ -199,9 +200,9 @@ class CallNumberActions {
       return;
     }
 
-    this.confirmNumber();
+    this.confirmContact();
   }
 }
 
 
-export default CallNumberActions;
+export default CallContactActions;

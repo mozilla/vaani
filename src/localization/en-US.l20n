@@ -4,6 +4,11 @@
 <general__iDidntUnderstandSayAgain "I didn't understand, say again."
   spoken: "I didn't understand, say again."
 >
+<general__ok "Ok"
+  spoken: "Ok"
+>
+<general__yesCommand "yes">
+<general__noCommand "no">
 
 
 <talkie__tapToGetStarted "Tap to get started.">
@@ -43,36 +48,26 @@
   spoken: "I can’t find that app."
 >
 <standingBy__openCommand "open">
-<standingBy__openCommandCue "startsWith">
+<standingBy__openCommandCue "start"> /* enum: start | end */
 <standingBy__callCommand "call">
-<standingBy__callCommandCue "startsWith">
+<standingBy__callCommandCue "start"> /* enum: start | end */
+<standingBy__dialCommand "dial">
+<standingBy__dialCommandCue "start"> /* enum: start | end */
 <standingBy__specialAppPhone "phone">
 <standingBy__specialAppContacts "contacts">
-<standingBy__grammar "
-  #JSGF v1.0;
-  grammar fxosVoiceCommands;
-  <app> =
-    {{ standingBy__specialAppPhone }} |
-    {{ standingBy__specialAppContacts }} |
-    {{ $appsGrammar }};
-  <digit> =
-    zero | /0.001/ ow | one | two | three | four | five |
-    six | seven | eight | nine
-  ;
-  public <simple> =
-    open <app> |
-    call <digit>+
-  ;
-">
 
 
 <callNumber__doYouWantMeToCall "Do you want me to call {{ $number }}? Yes/No"
   spoken: "Do you want me to call {{ $numberSpaced }}?"
 >
-<callNumber__grammar "
-  #JSGF v1.0;
-  grammar fxosVoiceCommands;
-  public <simple> =
-    yes | no
-  ;
-">
+<callNumber__iWasntAbleToCall "I'm sorry, I wasn't able to make the call."
+  spoken: "I'm sorry, I wasn't able to make the call."
+>
+
+
+<callContact__doYouWantMeToCall "Do you want me to call {{ $contactName }}? Yes/No"
+  spoken: "Do you want me to call?"
+>
+<callContact__iWasntAbleToCall "I'm sorry, I wasn't able to make the call."
+  spoken: "I'm sorry, I wasn't able to make the call."
+>

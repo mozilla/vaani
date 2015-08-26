@@ -18,7 +18,7 @@ class Localizer {
     this.prioritizedLangs = [];
 
     this._env = new Env(this.defaultLang, Fetch.bind(null, null));
-    this._ctx = this._env.createContext(['locales/{locale}.l20n']);
+    this._ctx = this._env.createContext(['localization/{locale}.l20n']);
 
     this._emitter = new EventEmitter2();
   }
@@ -77,9 +77,10 @@ class Localizer {
 
   /**
    * A shortcut for resolving entities.
-   * TODO Reza: extend functionality for entity arguments when passing an Array
    * @param entity {String|Array<String>} Either a String representing the
-   *        entity to resolve or an Array of strings.
+   *        entity to resolve or an Array of strings. If `entity` is an array
+   *        it's items may be simple strings or a two item array representing
+   *        an entity and an arguments object.
    * @param args {Object} Optional. When the `entity` argument is a String, the
    *        objecet of arguments passed to resolve.
    * @return {Promise}
@@ -88,7 +89,14 @@ class Localizer {
     debug('resolve', arguments);
 
     if (Object.prototype.toString.call(entity) === '[object Array]') {
-      return Promise.all(entity.map(this._ctx.resolve.bind(this._ctx, this.prioritizedLangs)));
+      return Promise.all(entity.map((ent) => {
+        if (Object.prototype.toString.call(ent) === '[object Array]') {
+          return this._ctx.resolve(this.prioritizedLangs, ent[0], ent[1]);
+        }
+        else {
+          return this._ctx.resolve(this.prioritizedLangs, ent, {});
+        }
+      }));
     }
     else {
       return this._ctx.resolve(this.prioritizedLangs, entity, args);

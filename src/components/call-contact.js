@@ -1,9 +1,9 @@
 import GaiaComponent from 'gaia-component';
-import CallNumberStore from '../stores/call-number';
-import CallNumberActions from '../actions/call-number';
+import CallContactStore from '../stores/call-contact';
+import CallContactActions from '../actions/call-contact';
 
 
-var CallNumber = GaiaComponent.register('vaani-call-number', {
+var CallContact = GaiaComponent.register('vaani-call-contact', {
   created: function () {
     this.setupShadowRoot();
 
@@ -11,22 +11,22 @@ var CallNumber = GaiaComponent.register('vaani-call-number', {
     this.els.text = this.shadowRoot.querySelector('.text');
   },
   attached: function () {
-    CallNumberStore.addChangeListener(this.render.bind(this));
+    CallContactStore.addChangeListener(this.render.bind(this));
 
-    CallNumberActions.setupSpeech(() => {
-      CallNumberActions.confirmNumber();
+    CallContactActions.setupSpeech(() => {
+      CallContactActions.confirmContact();
     });
 
     this.render();
   },
   detached: function () {
-    CallNumberStore.removeChangeListener(this.render.bind(this));
+    CallContactStore.removeChangeListener(this.render.bind(this));
   },
   render: function () {
-    this.els.text.textContent = CallNumberStore.getText();
+    this.els.text.textContent = CallContactStore.getText();
   },
   toggleMic: function () {
-    CallNumberActions.toggleMic();
+    CallContactActions.toggleMic();
   },
   template: `
     <div id="call-number">
@@ -51,4 +51,4 @@ var CallNumber = GaiaComponent.register('vaani-call-number', {
 });
 
 
-export default CallNumber;
+export default CallContact;
