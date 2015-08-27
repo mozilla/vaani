@@ -135,10 +135,12 @@ class StandingByActions {
           contactRequested = command.substring(0, command.length - (callCommand.length + 1));
         }
 
+        debug('_interpreter:contactRequested', contactRequested);
+
         var options = {
           filterBy: ['name'],
           filterValue: contactRequested,
-          filterOp: 'equals',
+          filterOp: 'startsWith',
           filterLimit: 1
         };
 
