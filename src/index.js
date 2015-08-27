@@ -168,7 +168,7 @@ class App {
         this.continue();
       }
       else {
-        var contactsGrammar = names.join(' | ');
+        var contactsGrammar = names.join(' | ').toLowerCase();
 
         if (names.length > 0) {
           AppStore.updateContactsGrammar(contactsGrammar);
