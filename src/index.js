@@ -135,7 +135,7 @@ class App {
         return appName;
       });
 
-      var appsGrammar = appNames.join(' | ').toLowerCase();
+      var appsGrammar = appNames.join(' | ').toLocaleLowerCase();
 
       AppStore.updateAppsGrammar(appsGrammar);
 
@@ -168,7 +168,7 @@ class App {
         this.continue();
       }
       else {
-        var contactsGrammar = names.join(' | ').toLowerCase();
+        var contactsGrammar = names.join(' | ').toLocaleLowerCase();
 
         if (names.length > 0) {
           AppStore.updateContactsGrammar(contactsGrammar);

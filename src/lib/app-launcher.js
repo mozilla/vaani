@@ -35,7 +35,7 @@ class AppLauncher {
     allApps.onsuccess = () => {
       var installedApps = allApps.result;
       var foundApp = installedApps.find((app, index, array) => {
-        return app.manifest.name.toLowerCase() === appName.toLowerCase();
+        return app.manifest.name.toLocaleLowerCase() === appName.toLocaleLowerCase();
       });
 
       if (foundApp) {
