@@ -1,3 +1,4 @@
+/* global navigator */
 import Debug from 'debug';
 import AppStore from '../stores/app';
 import CallNumberStore from '../stores/call-number';
@@ -19,6 +20,8 @@ let debug = Debug('StandingByActions');
 class StandingByActions {
   /**
    * Initializes a Vaani instance
+   * @param callback {Function} The function to call back when speech has
+   *        been setup.
    */
   static setupSpeech (callback) {
     debug('setupSpeech');
@@ -123,8 +126,13 @@ class StandingByActions {
       var specialAppPhone = entities[6].value;
       var specialAppContacts = entities[7].value;
 
-      if (command[callCommandCue](callCommand) && navigator.mozContacts) {
+      if (command[callCommandCue](callCommand)) {
         debug('_interpreter:callCommand', command);
+
+        if (!navigator.mozContacts) {
+          debug('_interpreter', 'navigator.mozContacts not found');
+          return;
+        }
 
         var contactRequested;
 
@@ -140,7 +148,7 @@ class StandingByActions {
         var options = {
           filterBy: ['name'],
           filterValue: contactRequested,
-          filterOp: 'startsWith',
+          filterOp: 'contains',
           filterLimit: 1
         };
 
