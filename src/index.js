@@ -1,5 +1,6 @@
 /* global window, document */
 import Debug from 'debug';
+import AppActions from './actions/app';
 import DisplayActions from './actions/display';
 import FirstTimeUseActions from './actions/first-time-use';
 import AppStore from './stores/app';
@@ -35,7 +36,7 @@ class App {
     FirstTimeUseActions.updateLaunchCount(launchCount);
 
     // build dynamic grammar
-    App._buildDynamicGrammar();
+    AppActions.buildDynamicGrammar();
 
     // instantiate top level components
     var display = document.createElement('vaani-display');
@@ -62,121 +63,6 @@ class App {
       navigator.mozApps.mgmt.oninstall = App._buildAppsGrammar;
       navigator.mozApps.mgmt.onuninstall = App._buildAppsGrammar;
     }
-  }
-
-  /**
-   * Hides first time use component
-   * @private
-   */
-  static _handleFirstTimeUseChange () {
-    debug('_handleFirstTimeUseChange');
-
-    var tourInfo = FirstTimeUseStore.getTourInfo();
-
-    if (tourInfo.inFlight) {
-      if (tourInfo.current === 0) {
-        DisplayActions.changeViews(null);
-      }
-    }
-  }
-
-  /**
-   * Builds dynamic grammar
-   * @private
-   */
-  static _buildDynamicGrammar () {
-    debug('_buildDynamicGrammar');
-
-    App._buildAppsGrammar();
-    App._buildContactsGrammar();
-  }
-
-  /**
-   * Builds apps grammar
-   * @private
-   */
-  static _buildAppsGrammar () {
-    debug('_buildAppsGrammar');
-
-    if (!navigator.mozApps || !navigator.mozApps.mgmt) {
-      debug('_buildAppsGrammar', 'navigator.mozApps not found');
-      return;
-    }
-
-    var allApps = navigator.mozApps.mgmt.getAll();
-
-    allApps.onsuccess = () => {
-      var priorityLocale = Localizer.getPriorityLocale();
-      var priorityLang = Localizer.getPriorityLang();
-
-      var appNames = allApps.result.filter((app) => {
-        if (!app.manifest ||
-            app.manifest.hasOwnProperty('role') ||
-            app.manifest.name === 'Communications' ||
-            app.manifest.name === 'Vaani') {
-          return false;
-        }
-
-        return true;
-      }).map((app) => {
-        var appName = app.manifest.name;
-
-        if (app.manifest.locales) {
-          if (app.manifest.locales.hasOwnProperty(priorityLocale) &&
-              app.manifest.locales[priorityLocale].hasOwnProperty('name')) {
-            appName = app.manifest.locales[priorityLocale].name;
-          }
-          else if (app.manifest.locales.hasOwnProperty(priorityLang) &&
-              app.manifest.locales[priorityLang].hasOwnProperty('name')) {
-            appName = app.manifest.locales[priorityLang].name;
-          }
-        }
-
-        return appName;
-      });
-
-      var appsGrammar = appNames.join(' | ').toLocaleLowerCase();
-
-      AppStore.updateAppsGrammar(appsGrammar);
-
-      debug('_buildAppsGrammar:appsGrammar', appsGrammar);
-    };
-  }
-
-  /**
-   * Builds contacts grammar
-   * @private
-   */
-  static _buildContactsGrammar () {
-    debug('_buildContactsGrammar');
-
-    if (!navigator.mozContacts) {
-      debug('_buildContactsGrammar', 'navigator.mozContacts not found');
-      return;
-    }
-
-    var names = [];
-    var request = window.navigator.mozContacts.getAll();
-
-    request.onsuccess = function () {
-      if (this.result) {
-        if (this.result.tel.length > 0) {
-          names.push(this.result.name);
-        }
-
-        // trigger request.onsuccess again with a new result
-        this.continue();
-      }
-      else {
-        var contactsGrammar = names.join(' | ').toLocaleLowerCase();
-
-        if (names.length > 0) {
-          AppStore.updateContactsGrammar(contactsGrammar);
-        }
-
-        debug('_buildContactsGrammar:contactsGrammar', contactsGrammar);
-      }
-    };
   }
 }
 
