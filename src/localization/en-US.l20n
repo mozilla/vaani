@@ -31,7 +31,8 @@
 
 <help__whatCanIAsk "What can I ask?">
 <help__openApp "Open &lt;App&gt;">
-<help__callNumber "Call &lt;Number&gt;">
+<help__dialNumber "Dial &lt;Number&gt;">
+<help__callContact "Call &lt;Favorite Contact&gt;">
 
 
 <community__helpTheCommunity "Help the Community">

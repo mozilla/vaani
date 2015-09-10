@@ -36,7 +36,8 @@ var Help = GaiaComponent.register('vaani-help', {
       <gaia-dialog-alert>
         <h3 data-l10n-id="help__whatCanIAsk"></h3>
         <p data-l10n-id="help__openApp"></p>
-        <p data-l10n-id="help__callNumber"></p>
+        <p data-l10n-id="help__dialNumber"></p>
+        <p data-l10n-id="help__callContact"></p>
       </gaia-dialog-alert>
     </div>
   `

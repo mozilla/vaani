@@ -55,13 +55,13 @@ class App {
     }
 
     // state change listeners
-    FirstTimeUseStore.addChangeListener(App._handleFirstTimeUseChange);
-    Localizer.addChangeListener(App._buildDynamicGrammar);
+    FirstTimeUseStore.addChangeListener(AppActions.handleFirstTimeUseChange);
+    Localizer.addChangeListener(AppActions.buildDynamicGrammar);
 
     // app install/uninstall events
     if (navigator.mozApps && navigator.mozApps.mgmt) {
-      navigator.mozApps.mgmt.oninstall = App._buildAppsGrammar;
-      navigator.mozApps.mgmt.onuninstall = App._buildAppsGrammar;
+      navigator.mozApps.mgmt.oninstall = AppActions.buildAppsGrammar;
+      navigator.mozApps.mgmt.onuninstall = AppActions.buildAppsGrammar;
     }
   }
 }
