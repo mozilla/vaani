@@ -10,6 +10,7 @@ class AppStore extends BaseStore {
 
     this.state = {
       appsGrammar: undefined,
+      contacts: [],
       contactsGrammar: undefined
     };
   }
@@ -42,6 +43,22 @@ class AppStore extends BaseStore {
    */
   updateContactsGrammar (grammar) {
     this.state.contactsGrammar = grammar;
+
+    this.emitChange();
+  }
+
+  /**
+   * Gets the contacts state
+   */
+  getContacts () {
+    return this.state.contacts;
+  }
+
+  /**
+   * Updates the contacts state and emits a change event
+   */
+  updateContacts (contacts) {
+    this.state.contacts = contacts;
 
     this.emitChange();
   }

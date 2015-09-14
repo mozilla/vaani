@@ -97,15 +97,17 @@ class AppActions {
       return;
     }
 
-    var contactNames = [];
+    var contacts = [];
     var request = navigator.mozContacts.getAll();
 
     request.onsuccess = function () {
       if (this.result) {
-        if (this.result.tel.length > 0) {
-          if (this.result.name.length > 0) {
-            contactNames.push(this.result.name[0]);
-          }
+        if (this.result.tel.length > 0 &&
+          this.result.name.length > 0 &&
+          this.result.category &&
+          this.result.category.includes('favorite')) {
+
+          contacts.push(this.result);
         }
 
         // trigger request.onsuccess again with a new result
@@ -114,7 +116,8 @@ class AppActions {
       else {
         var uniqueNames = {};
 
-        contactNames.forEach((name) => {
+        contacts.forEach((contact) => {
+          var name = contact.name[0];
           var nameParts = name.split(' ');
 
           nameParts.forEach((part) => {
@@ -127,8 +130,10 @@ class AppActions {
         var names = Object.keys(uniqueNames);
         var contactsGrammar = names.join(' | ').toLocaleLowerCase();
 
+        AppStore.updateContacts(contacts);
         AppStore.updateContactsGrammar(contactsGrammar);
 
+        debug('buildContactsGrammar:contacts', contacts);
         debug('buildContactsGrammar:contactsGrammar', contactsGrammar);
       }
     };
