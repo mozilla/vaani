@@ -145,20 +145,21 @@ class StandingByActions {
 
         debug('_interpreter:contactRequested', contactRequested);
 
-        var options = {
-          filterBy: ['name'],
-          filterValue: contactRequested,
-          filterOp: 'contains',
-          filterLimit: 1
-        };
+        var contacts = AppStore.getContacts();
+        var contactMatch;
 
-        var search = navigator.mozContacts.find(options);
+        for (let i = 0; i < contacts.length; i++) {
+          if (contacts[i].name[0].toLocaleLowerCase().includes(contactRequested)) {
+            contactMatch = contacts[i];
+            break;
+          }
+        }
 
-        search.onsuccess = () => {
-          CallContactStore.updateContact(search.result[0]);
+        debug('_interpreter:callCommand:contactMatch', contactMatch);
 
-          DisplayActions.changeViews('vaani-call-contact');
-        };
+        CallContactStore.updateContact(contactMatch);
+
+        DisplayActions.changeViews('vaani-call-contact');
       }
       else if (command[dialCommandCue](dialCommand)) {
         debug('_interpreter:dialCommand', command);
