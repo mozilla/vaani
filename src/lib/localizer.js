@@ -91,15 +91,15 @@ class Localizer {
     if (Object.prototype.toString.call(entity) === '[object Array]') {
       return Promise.all(entity.map((ent) => {
         if (Object.prototype.toString.call(ent) === '[object Array]') {
-          return this._ctx.resolve(this.prioritizedLangs, ent[0], ent[1]);
+          return this._ctx.resolveEntity(this.prioritizedLangs, ent[0], ent[1]);
         }
         else {
-          return this._ctx.resolve(this.prioritizedLangs, ent, {});
+          return this._ctx.resolveEntity(this.prioritizedLangs, ent, {});
         }
       }));
     }
     else {
-      return this._ctx.resolve(this.prioritizedLangs, entity, args);
+      return this._ctx.resolveEntity(this.prioritizedLangs, entity, args);
     }
   }
 
