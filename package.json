@@ -4,23 +4,24 @@
   "description": "",
   "main": "index.html",
   "scripts": {
+    "setup": "npm run bower && npm install",
     "bower": "npm install bower && bower install",
     "lint": "eslint ./src/**/*.js",
     "test": "npm run lint && lab -t 80 -S -T ./node_modules/lab-babel ./test/jsdom-setup.js ./test/src/ ./test/jsdom-teardown.js",
-    "start": "DEBUG=* http-server --ssl -p 8000 -c-1 ./build & watch 'npm run build' ./src",
+    "start": "watch 'npm run build' ./src",
     "build": "mkdir -p ./build && browserify ./src/index.js -t babelify -o ./build/index.js && cat ./bower_components/gaia-theme/gaia-theme.css src/index.css > ./build/index.css  && cp ./src/index.html ./build && cp ./src/manifest.webapp ./build && cp -R ./src/assets ./build && cp -R ./src/localization ./build",
     "clean": "rm -rf ./build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jedireza/fxos-voice-commands.git"
+    "url": "git+https://github.com/mozilla/vaani.git"
   },
   "author": "Reza Akhavan <jedireza@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/jedireza/fxos-voice-commands/issues"
+    "url": "https://github.com/mozilla/vaani/issues"
   },
-  "homepage": "https://github.com/jedireza/fxos-voice-commands#readme",
+  "homepage": "https://github.com/mozilla/vaani",
   "devDependencies": {
     "attachmediastream": "^1.3.2",
     "babel": "^5.6.1",
@@ -37,7 +38,6 @@
     "gaia-dialog": "gaia-components/gaia-dialog",
     "getusermedia": "^1.3.2",
     "hark": "^1.1.2",
-    "http-server": "^0.8.0",
     "jsdom": "^3.x.x",
     "l20n": "^3.0.3",
     "lab": "^5.13.0",
