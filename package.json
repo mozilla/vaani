@@ -47,6 +47,7 @@
     "string.prototype.endswith": "^0.2.0",
     "string.prototype.includes": "^1.0.0",
     "string.prototype.startswith": "^0.2.0",
+    "string_score": "^0.1.22",
     "watch": "^0.16.0"
   },
   "pre-commit": [
