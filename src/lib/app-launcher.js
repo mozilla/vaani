@@ -1,4 +1,6 @@
 /* global navigator */
+import 'string_score';
+
 
 class AppLauncher {
   /**
@@ -34,8 +36,17 @@ class AppLauncher {
 
     allApps.onsuccess = () => {
       var installedApps = allApps.result;
-      var foundApp = installedApps.find((app, index, array) => {
-        return app.manifest.name.toLocaleLowerCase() === appName.toLocaleLowerCase();
+      var highScore = 0;
+      var foundApp;
+
+      installedApps.forEach((app) => {
+        var thisName = app.manifest.name.toLocaleLowerCase();
+        var thisScore = thisName.score(appName);
+
+        if (thisScore > highScore) {
+          highScore = thisScore;
+          foundApp = app;
+        }
       });
 
       if (foundApp) {
