@@ -3,6 +3,7 @@ import Debug from 'debug';
 import DisplayActions from './display';
 import AppStore from '../stores/app';
 import FirstTimeUseStore from '../stores/first-time-use';
+import GrammarTools from '../lib/grammar-tools';
 import Localizer from '../lib/localizer';
 
 
@@ -75,7 +76,7 @@ class AppActions {
           }
         }
 
-        return appName;
+        return GrammarTools.clean(appName);
       });
 
       var appsGrammar = appNames.join(' | ').toLocaleLowerCase();
@@ -117,7 +118,7 @@ class AppActions {
         var uniqueNames = {};
 
         contacts.forEach((contact) => {
-          var name = contact.name[0];
+          var name = GrammarTools.clean(contact.name[0]);
           var nameParts = name.split(' ');
 
           nameParts.forEach((part) => {
