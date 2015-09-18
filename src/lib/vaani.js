@@ -197,6 +197,8 @@ class Vaani {
   cancel () {
     debug('cancel');
 
+    this.alertStop.play();
+
     if (this.isListening) {
       this.speechRecognition.abort();
     }

@@ -63,6 +63,11 @@ class App {
       navigator.mozApps.mgmt.oninstall = AppActions.buildAppsGrammar;
       navigator.mozApps.mgmt.onuninstall = AppActions.buildAppsGrammar;
     }
+
+    // contact change event
+    if (navigator.mozContacts) {
+      navigator.mozContacts.oncontactchange = AppActions.buildContactsGrammar;
+    }
   }
 }
 
