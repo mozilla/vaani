@@ -58,6 +58,11 @@ class AppActions {
             app.manifest.hasOwnProperty('role') ||
             app.manifest.name === 'Communications' ||
             app.manifest.name === 'Vaani') {
+
+          if (app.manifest.name === 'Browser') {
+            return true;
+          }
+
           return false;
         }
 
