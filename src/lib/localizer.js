@@ -89,17 +89,10 @@ class Localizer {
     debug('resolve', arguments);
 
     if (Object.prototype.toString.call(entity) === '[object Array]') {
-      return Promise.all(entity.map((ent) => {
-        if (Object.prototype.toString.call(ent) === '[object Array]') {
-          return this._ctx.resolveEntity(this.prioritizedLangs, ent[0], ent[1]);
-        }
-        else {
-          return this._ctx.resolveEntity(this.prioritizedLangs, ent, {});
-        }
-      }));
+      return this._ctx.resolveEntities(this.prioritizedLangs, entity);
     }
     else {
-      return this._ctx.resolveEntity(this.prioritizedLangs, entity, args);
+      return this._ctx.resolveEntities(this.prioritizedLangs, [[entity, args]]);
     }
   }
 
@@ -116,7 +109,13 @@ class Localizer {
       let el = l10nEls[i];
       let key = el.getAttribute('data-l10n-id');
 
-      this.resolve(key).then((entity) => {
+      this.resolve(key).then((entities) => {
+        if (entities.length === 0) {
+          return;
+        }
+
+        var entity = entities[0];
+
         el.innerHTML = entity.value;
 
         // TODO Reza: The attribute names here need logic from l20n that
