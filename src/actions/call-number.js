@@ -56,7 +56,13 @@ class CallNumberActions {
       numberSpaced: phoneNumber.replace(/(\d)(?=\d)/g, '$1 ')
     };
 
-    Localizer.resolve('callNumber__doYouWantMeToCall', args).then((entity) => {
+    Localizer.resolve('callNumber__doYouWantMeToCall', args).then((entities) => {
+      if (entities.length === 0) {
+        return;
+      }
+
+      var entity = entities[0];
+
       CallNumberStore.updateText(entity.value);
 
       this.vaani.say(entity.attrs.spoken, true);
@@ -77,7 +83,13 @@ class CallNumberActions {
     if (err) {
       debug('_interpreter error', err);
 
-      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
+      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entities) => {
+        if (entities.length === 0) {
+          return;
+        }
+
+        var entity = entities[0];
+
         CallNumberStore.updateText(entity.value);
 
         this.vaani.say(entity.attrs.spoken, true);

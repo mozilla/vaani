@@ -33,6 +33,8 @@ class StandingByActions {
       'standingBy__specialAppPhone',
       'standingBy__specialAppContacts'
     ]).then((entities) => {
+      debug('entities', entities);
+
       var openCommand = entities[0].value;
       var callCommand = entities[1].value;
       var dialCommand = entities[2].value;
@@ -78,7 +80,13 @@ class StandingByActions {
   static greetUser () {
     debug('greetUser');
 
-    Localizer.resolve('standingBy__howMayIHelpYou').then((entity) => {
+    Localizer.resolve('standingBy__howMayIHelpYou').then((entities) => {
+      if (entities.length === 0) {
+        return;
+      }
+
+      var entity = entities[0];
+
       StandingByStore.updateText(entity.value);
 
       this.vaani.listen();
@@ -98,7 +106,13 @@ class StandingByActions {
     if (err) {
       debug('_interpreter:error', err);
 
-      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
+      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entities) => {
+        if (entities.length === 0) {
+          return;
+        }
+
+        var entity = entities[0];
+
         this.vaani.say(entity.attrs.spoken, true);
 
         StandingByStore.updateText(entity.value);
@@ -208,7 +222,13 @@ class StandingByActions {
 
             var args = {app: appRequested};
 
-            Localizer.resolve('standingBy__iCantFindThatApp', args).then((entity) => {
+            Localizer.resolve('standingBy__iCantFindThatApp', args).then((entities) => {
+              if (entities.length === 0) {
+                return;
+              }
+
+              var entity = entities[0];
+
               this.vaani.say(entity.attrs.spoken);
 
               StandingByStore.updateText(entity.value);
@@ -223,7 +243,13 @@ class StandingByActions {
       else {
         debug('Unable to match interpretation');
 
-        Localizer.resolve('general__iWasntAbleToUnderstand').then((entity) => {
+        Localizer.resolve('general__iWasntAbleToUnderstand').then((entities) => {
+          if (entities.length === 0) {
+            return;
+          }
+
+          var entity = entities[0];
+
           this.vaani.say(entity.attrs.spoken);
 
           StandingByStore.updateText(entity.value);

@@ -57,7 +57,13 @@ class CallContactActions {
       contactName: contact && contact.name && contact.name[0] || undefined
     };
 
-    Localizer.resolve('callContact__doYouWantMeToCall', args).then((entity) => {
+    Localizer.resolve('callContact__doYouWantMeToCall', args).then((entities) => {
+      if (entities.length === 0) {
+        return;
+      }
+
+      var entity = entities[0];
+
       CallContactStore.updateText(entity.value);
 
       this.vaani.say(entity.attrs.spoken, true);
@@ -78,7 +84,13 @@ class CallContactActions {
     if (err) {
       debug('_interpreter error', err);
 
-      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entity) => {
+      Localizer.resolve('general__iDidntUnderstandSayAgain').then((entities) => {
+        if (entities.length === 0) {
+          return;
+        }
+
+        var entity = entities[0];
+
         CallContactStore.updateText(entity.value);
 
         this.vaani.say(entity.attrs.spoken, true);
