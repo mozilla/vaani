@@ -48,6 +48,17 @@ In dev mode we watch for changes and automatically re-build the app.
 $ npm start
 ```
 
+## Custom commands
+
+Custom Command is a feature to enable 3rd party apps to register their voice
+commands. Voice commands will be predefined actions in the short term. We may
+use [Action of schema.org](http://schema.org/Action) as base and extend it as
+action list. 3rd party apps should use JSON-LD to state which actions they
+support. Once the actions detected, Vaani calls the apps to handle that. 
+
+[Learn how to implement custom
+commands](https://wiki.mozilla.org/Firefox_OS/Vaani/Custom_Command).
+
 ## License
 
 Apache License, Version 2.0
