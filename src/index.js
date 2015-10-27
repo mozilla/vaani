@@ -56,17 +56,17 @@ class App {
 
     // state change listeners
     FirstTimeUseStore.addChangeListener(AppActions.handleFirstTimeUseChange);
-    Localizer.addChangeListener(AppActions.buildDynamicGrammar);
+    Localizer.addChangeListener(AppActions.buildDynamicGrammar.bind(AppActions));
 
     // app install/uninstall events
     if (navigator.mozApps && navigator.mozApps.mgmt) {
-      navigator.mozApps.mgmt.oninstall = AppActions.buildAppsGrammar;
-      navigator.mozApps.mgmt.onuninstall = AppActions.buildAppsGrammar;
+      navigator.mozApps.mgmt.oninstall = AppActions.buildAppsGrammar.bind(AppActions);
+      navigator.mozApps.mgmt.onuninstall = AppActions.buildAppsGrammar.bind(AppActions);
     }
 
     // contact change event
     if (navigator.mozContacts) {
-      navigator.mozContacts.oncontactchange = AppActions.buildContactsGrammar;
+      navigator.mozContacts.oncontactchange = AppActions.buildContactsGrammar.bind(AppActions);
     }
   }
 }
