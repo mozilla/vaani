@@ -40,6 +40,9 @@
     "audio-capture" : {
       "description" : "Audio capture for speech recognition"
     },
+    "speech-recognition" : {
+         "description": "Access to phone's embedded speech recognition"
+    },
     "moz-extremely-unstable-and-will-change-webcomponents": {
       "description": "Use web components"
     }
