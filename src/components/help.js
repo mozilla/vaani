@@ -1,5 +1,5 @@
-import 'gaia-dialog/gaia-dialog-alert';
-import GaiaComponent from 'gaia-component';
+import 'fxos-dialog/fxos-dialog-alert';
+import GaiaComponent from 'fxos-component';
 import Localizer from '../lib/localizer';
 import ToolbarActions from '../actions/toolbar';
 import DisplayActions from '../actions/display';
@@ -9,7 +9,7 @@ var Help = GaiaComponent.register('vaani-help', {
   created: function () {
     this.setupShadowRoot();
 
-    this.dialog = this.shadowRoot.querySelector('gaia-dialog-alert');
+    this.dialog = this.shadowRoot.querySelector('fxos-dialog-alert');
   },
   attached: function () {
     this.dialog.open();
@@ -33,12 +33,12 @@ var Help = GaiaComponent.register('vaani-help', {
   },
   template: `
     <div id="help">
-      <gaia-dialog-alert>
+      <fxos-dialog-alert>
         <h3 data-l10n-id="help__whatCanIAsk"></h3>
         <p data-l10n-id="help__openApp"></p>
         <p data-l10n-id="help__dialNumber"></p>
         <p data-l10n-id="help__callContact"></p>
-      </gaia-dialog-alert>
+      </fxos-dialog-alert>
     </div>
   `
 });

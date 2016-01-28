@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import CallNumberStore from '../stores/call-number';
 import CallNumberActions from '../actions/call-number';
 

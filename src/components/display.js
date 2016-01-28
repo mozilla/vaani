@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import DisplayStore from '../stores/display';
 
 

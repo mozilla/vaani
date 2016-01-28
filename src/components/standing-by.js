@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import AppStore from '../stores/app';
 import StandingByStore from '../stores/standing-by';
 import StandingByActions from '../actions/standing-by';
