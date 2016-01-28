@@ -11,7 +11,7 @@ FirefoxOS Virtual Assistant
 ```bash
 $ git clone git@github.com:mozilla/vaani.git
 $ cd vaani
-$ npm run setup
+$ npm install
 ```
 
 ## Build

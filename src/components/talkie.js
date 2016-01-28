@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import GetUserMedia from 'getusermedia';
 import AttachMediaStream from 'attachmediastream';
 import Hark from 'hark';

@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import ToolbarStore from '../stores/toolbar';
 import FirstTimeUseStore from '../stores/first-time-use';
 import DisplayActions from '../actions/display';

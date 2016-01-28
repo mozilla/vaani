@@ -1,4 +1,4 @@
-import GaiaComponent from 'gaia-component';
+import GaiaComponent from 'fxos-component';
 import Localizer from '../lib/localizer';
 import FirstTimeUseStore from '../stores/first-time-use';
 import FirstTimeUseActions from '../actions/first-time-use';
